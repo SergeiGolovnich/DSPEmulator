@@ -23,16 +23,16 @@ namespace DSPEmulator
 
             this.sourceProvider = sourceProvider;
         }
-        public TimeSpan LeftDelay
+        public double LeftDelayMillisec
         {
-            get { return SamplesToTimeSpan(leftDelayBySamples); }
-            set { leftDelayBySamples = TimeSpanToSamples(value); }
+            get { return SamplesToDoubleMillisec(leftDelayBySamples); }
+            set { leftDelayBySamples = MillisecToSamples(value); }
         }
 
-        public TimeSpan RightDelay
+        public double RightDelayMillisec
         {
-            get { return SamplesToTimeSpan(rightDelayBySamples); }
-            set { rightDelayBySamples = TimeSpanToSamples(value); }
+            get { return SamplesToDoubleMillisec(rightDelayBySamples); }
+            set { rightDelayBySamples = MillisecToSamples(value); }
         }
 
         public int LeftDelayBySamples
@@ -47,15 +47,15 @@ namespace DSPEmulator
             set { rightDelayBySamples = value; }
         }
 
-        private int TimeSpanToSamples(TimeSpan time)
+        private int MillisecToSamples(double time)
         {
-            var samples = (int)(time.TotalSeconds * WaveFormat.SampleRate);
+            var samples = (int)(time / 1000 * WaveFormat.SampleRate);
             return samples;
         }
 
-        private TimeSpan SamplesToTimeSpan(int samples)
+        private double SamplesToDoubleMillisec(int samples)
         {
-            return TimeSpan.FromSeconds(samples / (double)WaveFormat.SampleRate);
+            return (samples / (double)WaveFormat.SampleRate) * 1000;
         }
 
         public WaveFormat WaveFormat => sourceProvider.WaveFormat;

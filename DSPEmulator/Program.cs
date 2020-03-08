@@ -11,10 +11,13 @@ namespace DSPEmulator
     class Program
     {
         private static string outputDir = "OUTPUT";
+        private static double leftDelay = 0, rightDelay = 0;
         static void Main(string[] args)
         {
             MediaFoundationApi.Startup();
             Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, outputDir));
+
+            getDelayValues();
 
             foreach (var arg in args)
             {
@@ -32,16 +35,15 @@ namespace DSPEmulator
                     ISampleProvider resampled = stereo;
                     if(loadedAudio.WaveFormat.SampleRate != 44100)
                     {
-                        Console.WriteLine($"Resampling to 44100...");
                         resampled = new WdlResamplingSampleProvider(loadedAudio, 44100);
                     }
 
-                    Console.WriteLine("Processing...");
-                    var processedAudio = ChannelsDelay(resampled, 1000, 0);
+                    var processedAudio = ChannelsDelay(resampled, leftDelay, rightDelay);
 
-                    Console.WriteLine("Saving to mp3...");
                     saveToMp3(Path.Combine(Environment.CurrentDirectory, outputDir, $"{Path.GetFileNameWithoutExtension(arg)}.mp3"),
                         processedAudio);
+                    Console.WriteLine("Success.");
+                    Console.WriteLine("");
                 }
                 catch(Exception ex)
                 {
@@ -52,12 +54,26 @@ namespace DSPEmulator
             Console.ReadLine();
         }
 
+        private static void getDelayValues()
+        {
+            try
+            {
+                Console.Write("Enter left channel delay in milliseconds: ");
+                leftDelay = Convert.ToDouble(Console.ReadLine().Replace('.', ','));
+
+                Console.Write("Enter right channel delay in milliseconds: ");
+                rightDelay = Convert.ToDouble(Console.ReadLine().Replace('.', ','));
+            }
+            catch
+            {
+                Console.WriteLine("Wrong input. Try again...");
+                getDelayValues();
+            }
+        }
 
         private static ISampleProvider LoadFile(string arg)
         {
             var audioFile = new AudioFileReader(arg);
-
-            Console.WriteLine($"{audioFile.WaveFormat.SampleRate} {audioFile.WaveFormat.BitsPerSample} {audioFile.WaveFormat.Channels}");
 
             return audioFile;
 
@@ -68,8 +84,8 @@ namespace DSPEmulator
         {
             return new ChannelsDelaySampleProvider(audio)
             {
-                LeftDelay = TimeSpan.FromMilliseconds(leftChannelDelayMillisec),
-                RightDelay = TimeSpan.FromMilliseconds(rightChannelDelayMillisec)
+                LeftDelayMillisec = leftChannelDelayMillisec,
+                RightDelayMillisec = rightChannelDelayMillisec
             };
         }
 
