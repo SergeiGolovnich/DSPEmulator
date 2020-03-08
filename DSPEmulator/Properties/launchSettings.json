@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DSPEmulator": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\SteamLibrary\\steamapps\\common\\Counter-Strike Global Offensive\\csgo\\sound\\hlportal.org\\quake\\standard\\perfect.mp3\""
+    }
+  }
+}
