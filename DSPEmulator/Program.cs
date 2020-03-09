@@ -63,6 +63,9 @@ namespace DSPEmulator
 
                 Console.Write("Enter right channel delay in milliseconds: ");
                 rightDelay = Convert.ToDouble(Console.ReadLine().Replace('.', ','));
+
+                if (leftDelay < 0 || rightDelay < 0)
+                    throw new ArgumentOutOfRangeException("Delays can't be below zero.");
             }
             catch
             {
