@@ -5,12 +5,15 @@ using NAudio;
 using NAudio.Wave;
 using NAudio.MediaFoundation;
 using NAudio.Wave.SampleProviders;
+using Newtonsoft.Json;
 
 namespace DSPEmulator
 {
     class Program
     {
         private static string outputDir = "OUTPUT";
+        private static string equalizerFilename = "equalizer.json";
+        public static EqualizerParams eqParams = null;
         private static double leftDelay = 0, rightDelay = 0;
         static void Main(string[] args)
         {
@@ -19,12 +22,20 @@ namespace DSPEmulator
                 Console.WriteLine("There is nothing to process...");
                 Console.ReadLine();
             }
+            else if(args.Length == 1 && (args[0] == "--create-equalizer"))
+            {
+                createEqualizerJson(equalizerFilename);
+
+                Console.WriteLine("Done.");
+                Console.ReadLine();
+            }
             else
             {
 
                 MediaFoundationApi.Startup();
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, outputDir));
 
+                readEqParams(equalizerFilename);
                 getDelayValues();
 
                 foreach (var arg in args)
@@ -62,6 +73,57 @@ namespace DSPEmulator
                 Console.WriteLine("Done.");
                 Console.ReadLine();
             }
+        }
+
+        private static void readEqParams(string equalizerFilename)
+        {
+            if(File.Exists(Path.Combine(Environment.CurrentDirectory, equalizerFilename)))
+            {
+                try
+                {
+                    string jsonString = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, equalizerFilename));
+                    eqParams = JsonConvert.DeserializeObject<EqualizerParams>(jsonString);
+                }catch(Exception ex)
+                {
+                    Console.WriteLine("Can not load equalizer params. " + ex.Message);
+                    eqParams = null;
+                }
+                return;
+            }
+            Console.WriteLine("Can not find equalizer params file.");
+        }
+
+        private static void createEqualizerJson(string equalizerFilename)
+        {
+            var eqParams = new EqualizerParams();
+            eqParams.LeftChannel.Add(new EqualizerBand
+            {
+                Bandwidth = 1.0f,
+                Frequency = 1000f,
+                Gain = 6f
+            });
+            eqParams.LeftChannel.Add(new EqualizerBand
+            {
+                Bandwidth = 1.0f,
+                Frequency = 10000f,
+                Gain = 6f
+            });
+
+            eqParams.RightChannel.Add(new EqualizerBand
+            {
+                Bandwidth = 1.0f,
+                Frequency = 100f,
+                Gain = 6f
+            });
+            eqParams.RightChannel.Add(new EqualizerBand
+            {
+                Bandwidth = 1.0f,
+                Frequency = 6000f,
+                Gain = 6f
+            });
+
+            string jsonString = JsonConvert.SerializeObject(eqParams);
+            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, equalizerFilename), jsonString);
         }
 
         private static void getDelayValues()
