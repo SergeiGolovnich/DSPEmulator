@@ -59,6 +59,8 @@ namespace DSPEmulator
 
                         var processedAudio = ChannelsDelay(resampled, leftDelay, rightDelay);
 
+                        processedAudio = eqParams == null ? processedAudio : EqualizeChannels(processedAudio);
+
                         saveToMp3(Path.Combine(Environment.CurrentDirectory, outputDir, $"{Path.GetFileNameWithoutExtension(arg)}.mp3"),
                             processedAudio);
 
@@ -73,6 +75,11 @@ namespace DSPEmulator
                 Console.WriteLine("Done.");
                 Console.ReadLine();
             }
+        }
+
+        private static ISampleProvider EqualizeChannels(ISampleProvider audio)
+        {
+            return new Equalizer(audio, eqParams);
         }
 
         private static void readEqParams(string equalizerFilename)

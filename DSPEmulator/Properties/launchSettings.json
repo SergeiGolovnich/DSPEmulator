@@ -1,8 +1,7 @@
 {
   "profiles": {
     "DSPEmulator": {
-      "commandName": "Project",
-      "commandLineArgs": "test"
+      "commandName": "Project"
     }
   }
 }

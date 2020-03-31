@@ -14,6 +14,9 @@ namespace DSPEmulator
         private readonly int channels;
         private bool updated;
 
+        public Equalizer(ISampleProvider sourceProvider, EqualizerParams eqParams) : 
+            this(sourceProvider, eqParams.LeftChannel.ToArray(), eqParams.RightChannel.ToArray())
+        {}
         public Equalizer(ISampleProvider sourceProvider, EqualizerBand[] leftBands, EqualizerBand[] rightBands)
         {
             this.sourceProvider = sourceProvider;
