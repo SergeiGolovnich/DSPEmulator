@@ -83,14 +83,19 @@ namespace DSPEmulator
                 {
                     string jsonString = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, equalizerFilename));
                     eqParams = JsonConvert.DeserializeObject<EqualizerParams>(jsonString);
-                }catch(Exception ex)
+                    Console.WriteLine("Equalizer params loaded.");
+                }
+                catch(Exception ex)
                 {
                     Console.WriteLine("Can not load equalizer params. " + ex.Message);
                     eqParams = null;
                 }
-                return;
             }
-            Console.WriteLine("Can not find equalizer params file.");
+            else
+            {
+                Console.WriteLine("Can not find equalizer params file.");
+            }
+            
         }
 
         private static void createEqualizerJson(string equalizerFilename)
