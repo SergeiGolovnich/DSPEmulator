@@ -14,44 +14,54 @@ namespace DSPEmulator
         private static double leftDelay = 0, rightDelay = 0;
         static void Main(string[] args)
         {
-            MediaFoundationApi.Startup();
-            Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, outputDir));
-
-            getDelayValues();
-
-            foreach (var arg in args)
+            if (args.Length == 0)
             {
-                try
-                {
-                    Console.WriteLine($"Loading file {Path.GetFileName(arg)}.");
-                    var loadedAudio = LoadFile(arg);
-
-                    var stereo = loadedAudio;
-                    if (loadedAudio.WaveFormat.Channels != 2)
-                    {
-                        stereo = new MonoToStereoSampleProvider(loadedAudio);
-                    }
-
-                    ISampleProvider resampled = stereo;
-                    if(loadedAudio.WaveFormat.SampleRate != 44100)
-                    {
-                        resampled = new WdlResamplingSampleProvider(loadedAudio, 44100);
-                    }
-
-                    var processedAudio = ChannelsDelay(resampled, leftDelay, rightDelay);
-
-                    saveToMp3(Path.Combine(Environment.CurrentDirectory, outputDir, $"{Path.GetFileNameWithoutExtension(arg)}.mp3"),
-                        processedAudio);
-                    Console.WriteLine("Success.");
-                    Console.WriteLine("");
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine($"Error on file: {Path.GetFileName(arg)}. {ex.Message}");
-                }
+                Console.WriteLine("There is nothing to process...");
+                Console.ReadLine();
             }
-            Console.WriteLine("Done.");
-            Console.ReadLine();
+            else
+            {
+
+                MediaFoundationApi.Startup();
+                Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, outputDir));
+
+                getDelayValues();
+
+                foreach (var arg in args)
+                {
+                    try
+                    {
+                        Console.WriteLine($"Loading file {Path.GetFileName(arg)}.");
+                        var loadedAudio = LoadFile(arg);
+
+                        var stereo = loadedAudio;
+                        if (loadedAudio.WaveFormat.Channels != 2)
+                        {
+                            stereo = new MonoToStereoSampleProvider(loadedAudio);
+                        }
+
+                        var resampled = stereo;
+                        if (stereo.WaveFormat.SampleRate != 44100)
+                        {
+                            resampled = new WdlResamplingSampleProvider(stereo, 44100);
+                        }
+
+                        var processedAudio = ChannelsDelay(resampled, leftDelay, rightDelay);
+
+                        saveToMp3(Path.Combine(Environment.CurrentDirectory, outputDir, $"{Path.GetFileNameWithoutExtension(arg)}.mp3"),
+                            processedAudio);
+
+                        Console.WriteLine("Success.");
+                        Console.WriteLine("");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error on file: {Path.GetFileName(arg)}. {ex.Message}");
+                    }
+                }
+                Console.WriteLine("Done.");
+                Console.ReadLine();
+            }
         }
 
         private static void getDelayValues()
