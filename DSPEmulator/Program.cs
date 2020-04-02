@@ -15,6 +15,7 @@ namespace DSPEmulator
         private static string equalizerFilename = "equalizer.json";
         public static EqualizerParams eqParams = null;
         private static double leftDelay = 0, rightDelay = 0;
+        private static float volumeAdjustDB = 0;
         static void Main(string[] args)
         {
             if (args.Length == 0)
@@ -36,6 +37,7 @@ namespace DSPEmulator
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, outputDir));
 
                 readEqParams(equalizerFilename);
+                calcAdjustVolumeFromEq(eqParams);
                 getDelayValues();
 
                 foreach (var arg in args)
@@ -49,6 +51,15 @@ namespace DSPEmulator
                         if (loadedAudio.WaveFormat.Channels != 2)
                         {
                             stereo = new MonoToStereoSampleProvider(loadedAudio);
+                        }
+
+                        if(volumeAdjustDB < 0)
+                        {
+                            stereo = new ChannelsVolumeSampleProvider(stereo)
+                            {
+                                LeftChannelVolumeInDB = volumeAdjustDB,
+                                RightChannelVolumeInDB = volumeAdjustDB
+                            };
                         }
 
                         var resampled = stereo;
@@ -75,6 +86,24 @@ namespace DSPEmulator
                 Console.WriteLine("Done.");
                 Console.ReadLine();
             }
+        }
+
+        private static void calcAdjustVolumeFromEq(EqualizerParams eqParams)
+        {
+            if (eqParams == null)
+                return;
+
+            float maxEqGain = 0;
+            foreach(EqualizerBand eb in eqParams.LeftChannel)
+            {
+                if (eb.Gain > 0) maxEqGain = Math.Max(eb.Gain, maxEqGain);
+            }
+            foreach (EqualizerBand eb in eqParams.RightChannel)
+            {
+                if (eb.Gain > 0) maxEqGain = Math.Max(eb.Gain, maxEqGain);
+            }
+
+            volumeAdjustDB = -maxEqGain;
         }
 
         private static ISampleProvider EqualizeChannels(ISampleProvider audio)
