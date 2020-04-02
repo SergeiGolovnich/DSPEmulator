@@ -16,6 +16,7 @@ namespace DSPEmulator
         public static EqualizerParams eqParams = null;
         private static double leftDelay = 0, rightDelay = 0;
         private static float volumeAdjustDB = 0;
+        private static float leftVolumeDB = 0, rightVolumeDB = 0;
         static void Main(string[] args)
         {
             if (args.Length == 0)
@@ -39,6 +40,7 @@ namespace DSPEmulator
                 readEqParams(equalizerFilename);
                 calcAdjustVolumeFromEq(eqParams);
                 getDelayValues();
+                getChannelsVolume();
 
                 foreach (var arg in args)
                 {
@@ -53,7 +55,7 @@ namespace DSPEmulator
                             stereo = new MonoToStereoSampleProvider(loadedAudio);
                         }
 
-                        if(volumeAdjustDB < 0)
+                        if (volumeAdjustDB < 0)
                         {
                             stereo = new ChannelsVolumeSampleProvider(stereo)
                             {
@@ -72,6 +74,8 @@ namespace DSPEmulator
 
                         processedAudio = eqParams == null ? processedAudio : EqualizeChannels(processedAudio);
 
+                        processedAudio = leftVolumeDB == 0 && rightVolumeDB == 0 ? processedAudio : AdjustChannelsVolume(processedAudio);
+
                         saveToMp3(Path.Combine(Environment.CurrentDirectory, outputDir, $"{Path.GetFileNameWithoutExtension(arg)}.mp3"),
                             processedAudio);
 
@@ -85,6 +89,36 @@ namespace DSPEmulator
                 }
                 Console.WriteLine("Done.");
                 Console.ReadLine();
+            }
+        }
+
+        private static ChannelsVolumeSampleProvider AdjustChannelsVolume(ISampleProvider processedAudio)
+        {
+            return new ChannelsVolumeSampleProvider(processedAudio)
+            {
+                LeftChannelVolumeInDB = leftVolumeDB,
+                RightChannelVolumeInDB = rightVolumeDB
+            };
+        }
+
+        private static void getChannelsVolume()
+        {
+            try
+            {
+                Console.Write("Enter left channel volume in Decibels: ");
+                leftVolumeDB = (float)Convert.ToDouble(Console.ReadLine().Replace('.', ','));
+
+                Console.Write("Enter right channel volume in Decibels: ");
+                rightVolumeDB = (float)Convert.ToDouble(Console.ReadLine().Replace('.', ','));
+
+                if (leftVolumeDB > 12 || rightVolumeDB > 12)
+                    throw new ArgumentOutOfRangeException("Too much gain! Maximum +12 decibels.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Wrong input. Try again...");
+                getChannelsVolume();
             }
         }
 
@@ -180,8 +214,9 @@ namespace DSPEmulator
                 if (leftDelay < 0 || rightDelay < 0)
                     throw new ArgumentOutOfRangeException("Delays can't be below zero.");
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Console.WriteLine("Wrong input. Try again...");
                 getDelayValues();
             }
