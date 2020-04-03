@@ -1,7 +1,7 @@
 # DSPEmulator
 Convert audio files to mp3 with channel delays and equalization.
 # Build
-The project is compiled using Visual Studio Community 2019. Require [NAudio](https://github.com/naudio/NAudio).
+The project is compiled using Visual Studio Community 2019. Require [NAudio](https://github.com/naudio/NAudio), [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json).
 # Usage
 Just drag and drop files onto the program and enter the channel delays. Equalization parameters are stored in a file 'equalizer.json'. To create an example file of equalization parameters, run the program with the argument '--create-equalizer'. 
 # For Whom?
