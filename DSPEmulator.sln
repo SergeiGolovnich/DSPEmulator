@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSPEmulator", "DSPEmulator\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSPEmulatorLibrary", "DSPEmulatorLibrary\DSPEmulatorLibrary.csproj", "{B7C57BEC-F9E7-4DD9-8988-D1E6A657D4BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSPEmulatorUI", "DSPEmulatorUI\DSPEmulatorUI.csproj", "{182FA8EC-D428-4D52-87C5-51C988219286}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,14 @@ Global
 		{B7C57BEC-F9E7-4DD9-8988-D1E6A657D4BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B7C57BEC-F9E7-4DD9-8988-D1E6A657D4BB}.Release|x64.ActiveCfg = Release|Any CPU
 		{B7C57BEC-F9E7-4DD9-8988-D1E6A657D4BB}.Release|x64.Build.0 = Release|Any CPU
+		{182FA8EC-D428-4D52-87C5-51C988219286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{182FA8EC-D428-4D52-87C5-51C988219286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{182FA8EC-D428-4D52-87C5-51C988219286}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{182FA8EC-D428-4D52-87C5-51C988219286}.Debug|x64.Build.0 = Debug|Any CPU
+		{182FA8EC-D428-4D52-87C5-51C988219286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{182FA8EC-D428-4D52-87C5-51C988219286}.Release|Any CPU.Build.0 = Release|Any CPU
+		{182FA8EC-D428-4D52-87C5-51C988219286}.Release|x64.ActiveCfg = Release|Any CPU
+		{182FA8EC-D428-4D52-87C5-51C988219286}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
