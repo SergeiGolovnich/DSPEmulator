@@ -5,8 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DSPEmulatorUI.Views"
         mc:Ignorable="d"
-        Title="DSP Emulator" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="DSP Emulator" Height="450" Width="800"
+        FontFamily="Segou UI Light" FontSize="16">
+    <TabControl TabStripPlacement="Left">
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Margin="5" Orientation="Vertical">
+                    <Image Width="40" Source="/Views/files_icon.png" />
+                    <TextBlock TextAlignment="Center" x:Name="filesLabel">Files
+                    </TextBlock>
+                </StackPanel>
+            </TabItem.Header>
+            
+            Files tab
+        </TabItem>
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Margin="5" Orientation="Vertical">
+                    <Image Width="40" Source="/Views/dsp_icon.png" />
+                    <TextBlock TextAlignment="Center" x:Name="dspLabel">DSP</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
+            
+            DSP tab
+        </TabItem>
+    </TabControl>
 </Window>
