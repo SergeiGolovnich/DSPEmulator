@@ -7,27 +7,14 @@
         mc:Ignorable="d"
         Title="DSP Emulator" Height="450" Width="800"
         FontFamily="Segou UI Light" FontSize="16">
-    <TabControl TabStripPlacement="Left">
-        <TabItem>
-            <TabItem.Header>
+    <TabControl x:Name="Items" TabStripPlacement="Left">
+        <TabControl.ItemTemplate>
+            <DataTemplate>
                 <StackPanel Margin="5" Orientation="Vertical">
-                    <Image Width="40" Source="/Views/files_icon.png" />
-                    <TextBlock TextAlignment="Center" x:Name="filesLabel">Files
-                    </TextBlock>
+                    <Image Width="40" Source="{Binding ImagePath}" />
+                    <TextBlock TextAlignment="Center" x:Name="filesLabel" Text="{Binding DisplayName}"/>
                 </StackPanel>
-            </TabItem.Header>
-            
-            Files tab
-        </TabItem>
-        <TabItem>
-            <TabItem.Header>
-                <StackPanel Margin="5" Orientation="Vertical">
-                    <Image Width="40" Source="/Views/dsp_icon.png" />
-                    <TextBlock TextAlignment="Center" x:Name="dspLabel">DSP</TextBlock>
-                </StackPanel>
-            </TabItem.Header>
-            
-            DSP tab
-        </TabItem>
+            </DataTemplate>
+        </TabControl.ItemTemplate>
     </TabControl>
 </Window>
