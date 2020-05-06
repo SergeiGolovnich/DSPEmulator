@@ -33,7 +33,7 @@
 
         <!--Column 1-->
         <TextBlock Grid.Column="1" Text="Output Folder: " VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-        <Grid Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="0,5,4,0">
+        <Grid Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="0,5,5,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -41,6 +41,7 @@
             <TextBox IsReadOnly="True" x:Name="OutputFolder" VerticalAlignment="Top" />
             <Button Grid.Row="1" x:Name="SetOutputFolder" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Set Output Folder" Margin="0,10,0,0"/>
         </Grid>
-        
+
+        <Button x:Name="StartProcess" Grid.Column="1" Grid.Row="1" Height="30" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,5,5">Start Process</Button>
     </Grid>
 </UserControl>

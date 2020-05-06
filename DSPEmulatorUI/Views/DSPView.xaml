@@ -6,8 +6,7 @@
              xmlns:local="clr-namespace:DSPEmulatorUI.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="46,10,0,0" Text="DSP options will be here" TextWrapping="Wrap" VerticalAlignment="Top"/>
+    <ListBox x:Name="Items">
 
-    </Grid>
+    </ListBox>
 </UserControl>

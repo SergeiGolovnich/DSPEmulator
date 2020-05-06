@@ -9,13 +9,14 @@ namespace DSPEmulatorUI.ViewModels
     public class FilesViewModel : Screen
     {
         public string ImagePath { get; } = "/Views/files_icon.png";
+        public string SelectedFile { get; set; }
+        public BindableCollection<string> Files { get; set; } = new BindableCollection<string>();
+        public string OutputFolder { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+        public event EventHandler StartProcessEvent;
         public FilesViewModel()
         {
             DisplayName = "Audio Files";
         }
-        public string SelectedFile { get; set; }
-        public BindableCollection<string> Files { get; set; } = new BindableCollection<string>();
-        public string OutputFolder { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 
         public void AddFiles()
         {
@@ -71,6 +72,10 @@ namespace DSPEmulatorUI.ViewModels
             {
                 Files.Remove((string)item);
             }
+        }
+        public void StartProcess()
+        {
+            StartProcessEvent?.Invoke(this, null);
         }
     }
 }

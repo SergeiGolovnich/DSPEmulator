@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DSPEmulatorLibrary\DSPEmulatorLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Views\dsp_icon.png" />
     <Resource Include="Views\files_icon.png" />
     <Resource Include="Views\plus.png" />
