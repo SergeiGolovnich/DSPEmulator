@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Windows.Input;
 
@@ -9,7 +10,6 @@ namespace DSPEmulatorUI.ViewModels
     public class FilesViewModel : Screen
     {
         public string ImagePath { get; } = "/Views/files_icon.png";
-        public string SelectedFile { get; set; }
         public BindableCollection<string> Files { get; set; } = new BindableCollection<string>();
         public string OutputFolder { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         public event EventHandler StartProcessEvent;
@@ -66,11 +66,17 @@ namespace DSPEmulatorUI.ViewModels
             }
         }
 
-        public void RemoveSelectedItem(object item, KeyEventArgs e)
+        public void RemoveSelectedItems(IEnumerable<object> items, KeyEventArgs e)
         {
-            if (e.Key == Key.Delete && item != null)
+            if (e.Key == Key.Delete && items != null)
             {
-                Files.Remove((string)item);
+                List<string> items_copy = new List<string>();
+                foreach(var item in items)
+                {
+                    items_copy.Add((string)item);
+                }
+
+                Files.RemoveRange(items_copy);
             }
         }
         public void StartProcess()
