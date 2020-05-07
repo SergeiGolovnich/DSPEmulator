@@ -15,6 +15,7 @@ namespace DSPEmulatorUI.ViewModels
             DisplayName = "DSP";
 
             Items.Add(new DelayEffectViewModel());
+            Items.Add(new EqualizerEffectViewModel());
         }
 
         public ISampleProvider EffectProvider(ISampleProvider sourceProvider)

@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="DSPEmulatorUI.Views.EqualizerBandView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DSPEmulatorUI.Views"
+             mc:Ignorable="d">
+    <Border Padding="1" Margin="1" BorderBrush="Gainsboro" BorderThickness="1">
+    <StackPanel Orientation="Vertical">
+        <Button x:Name="RemoveBand" Width="20" Height="20" BorderThickness="0" ToolTip="Remove Band" Background="{x:Null}">
+            <Image Source="/Views/cross.png" />
+        </Button>
+        <TextBlock HorizontalAlignment="Center">Freq</TextBlock>
+        <TextBox x:Name="Freq" HorizontalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}"></TextBox>
+
+        <Slider x:Name="Gain" Maximum="12" Minimum="-12" Orientation="Vertical" TickPlacement="TopLeft" Height="150" HorizontalAlignment="Center">
+        </Slider>
+        <TextBlock Text="{Binding ElementName=Gain, Path=Value, StringFormat={}{0:F1} db}" HorizontalAlignment="Center"/>
+
+        <TextBlock HorizontalAlignment="Center">Q</TextBlock>
+        <TextBox x:Name="Q" HorizontalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}"></TextBox>
+    </StackPanel>
+    </Border>
+</UserControl>

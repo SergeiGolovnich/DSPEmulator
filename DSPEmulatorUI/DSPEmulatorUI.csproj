@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\cross.png" />
     <None Remove="Views\dsp_icon.png" />
     <None Remove="Views\files_icon.png" />
     <None Remove="Views\plus.png" />
+    <None Remove="Views\plus2.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,9 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Views\cross.png" />
     <Resource Include="Views\dsp_icon.png" />
     <Resource Include="Views\files_icon.png" />
     <Resource Include="Views\plus.png" />
+    <Resource Include="Views\plus2.png" />
   </ItemGroup>
 
 </Project>
