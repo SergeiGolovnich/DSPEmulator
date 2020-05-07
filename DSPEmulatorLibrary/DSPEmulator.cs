@@ -14,10 +14,22 @@ namespace DSPEmulatorLibrary
         {
             var audioFile = new AudioFileReader(inputFile);
 
-            var processedAudio = effects.EffectProvider(audioFile);
+            var stereoFile = convertToStereo(audioFile);
+
+            var processedAudio = effects.EffectProvider(stereoFile);
 
             saveToMp3(Path.Combine(outputFolder, $"{Path.GetFileNameWithoutExtension(inputFile)}.mp3"),
                             processedAudio);
+        }
+
+        private static ISampleProvider convertToStereo(ISampleProvider audioFile)
+        {
+            if (audioFile.WaveFormat.Channels != 2)
+            {
+               return new MonoToStereoSampleProvider(audioFile);
+            }
+
+            return audioFile;
         }
 
         private static void saveToMp3(string fileName, ISampleProvider audioToSave)
