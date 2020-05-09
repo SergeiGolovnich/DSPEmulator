@@ -29,7 +29,7 @@ namespace DSPEmulatorUI.ViewModels
                 return sourceProvider;
             }
 
-            float adjustVolume = calcAdjustVolumeFromEq(eqParams);
+            float adjustVolume = CalcAdjustVolumeFromEq(eqParams);
             var adjusted = new ChannelsVolumeSampleProvider(sourceProvider)
             {
                 LeftChannelVolumeInDB = adjustVolume,
@@ -39,7 +39,7 @@ namespace DSPEmulatorUI.ViewModels
             return new EqualizerSampleProvider(adjusted, eqParams);
         }
 
-        private float calcAdjustVolumeFromEq(EqualizerParams eqParams)
+        private float CalcAdjustVolumeFromEq(EqualizerParams eqParams)
         {
             float maxEqGain = 0;
             foreach (EqualizerBand eb in eqParams.LeftChannel)

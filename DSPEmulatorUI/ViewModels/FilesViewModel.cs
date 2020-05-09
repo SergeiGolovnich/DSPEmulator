@@ -33,13 +33,14 @@ namespace DSPEmulatorUI.ViewModels
 
         public void AddFiles()
         {
-            var dialog = new Microsoft.Win32.OpenFileDialog();
-
-            dialog.Filter = "Audio Files| *.flac;*.mp3";
-            dialog.Title = "Select Audio Files";
-            dialog.CheckFileExists = true;
-            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-            dialog.Multiselect = true;
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Audio Files| *.flac;*.mp3",
+                Title = "Select Audio Files",
+                CheckFileExists = true,
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
+                Multiselect = true
+            };
 
             var result = dialog.ShowDialog();
             if (result == true && dialog.FileNames.Length > 0)
@@ -57,12 +58,14 @@ namespace DSPEmulatorUI.ViewModels
         public void SetOutputFolder()
         {
             // Create a "Save As" dialog for selecting a directory (HACK)
-            var dialog = new Microsoft.Win32.SaveFileDialog();
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), // Use current value for initial dir
+                Title = "Select a Directory", // instead of default "Save As"
+                Filter = "Directory|*.this.directory", // Prevents displaying files
+                FileName = "select" // Filename will then be "select.this.directory"
+            };
 
-            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic); // Use current value for initial dir
-            dialog.Title = "Select a Directory"; // instead of default "Save As"
-            dialog.Filter = "Directory|*.this.directory"; // Prevents displaying files
-            dialog.FileName = "select"; // Filename will then be "select.this.directory"
             if (dialog.ShowDialog() == true)
             {
                 string path = dialog.FileName;

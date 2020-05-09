@@ -11,8 +11,8 @@ namespace DSPEmulator
 {
     class Program
     {
-        private static string outputDir = "OUTPUT";
-        private static string equalizerFilename = "equalizer.json";
+        private static readonly string outputDir = "OUTPUT";
+        private static readonly string equalizerFilename = "equalizer.json";
         public static EqualizerParams eqParams = null;
         private static double leftDelay = 0, rightDelay = 0;
         private static float volumeAdjustDB = 0;
@@ -26,7 +26,7 @@ namespace DSPEmulator
             }
             else if(args.Length == 1 && (args[0] == "--create-equalizer"))
             {
-                createEqualizerJson(equalizerFilename);
+                CreateEqualizerJson(equalizerFilename);
 
                 Console.WriteLine("Done.");
                 Console.ReadLine();
@@ -37,10 +37,10 @@ namespace DSPEmulator
                 MediaFoundationApi.Startup();
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, outputDir));
 
-                readEqParams(equalizerFilename);
-                calcAdjustVolumeFromEq(eqParams);
-                getDelayValues();
-                getChannelsVolume();
+                ReadEqParams(equalizerFilename);
+                CalcAdjustVolumeFromEq(eqParams);
+                GetDelayValues();
+                GetChannelsVolume();
 
                 foreach (var arg in args)
                 {
@@ -76,7 +76,7 @@ namespace DSPEmulator
 
                         processedAudio = leftVolumeDB == 0 && rightVolumeDB == 0 ? processedAudio : AdjustChannelsVolume(processedAudio);
 
-                        saveToMp3(Path.Combine(Environment.CurrentDirectory, outputDir, $"{Path.GetFileNameWithoutExtension(arg)}.mp3"),
+                        SaveToMp3(Path.Combine(Environment.CurrentDirectory, outputDir, $"{Path.GetFileNameWithoutExtension(arg)}.mp3"),
                             processedAudio);
 
                         Console.WriteLine("Success.");
@@ -101,7 +101,7 @@ namespace DSPEmulator
             };
         }
 
-        private static void getChannelsVolume()
+        private static void GetChannelsVolume()
         {
             try
             {
@@ -118,11 +118,11 @@ namespace DSPEmulator
             {
                 Console.WriteLine(ex.Message);
                 Console.WriteLine("Wrong input. Try again...");
-                getChannelsVolume();
+                GetChannelsVolume();
             }
         }
 
-        private static void calcAdjustVolumeFromEq(EqualizerParams eqParams)
+        private static void CalcAdjustVolumeFromEq(EqualizerParams eqParams)
         {
             if (eqParams == null)
                 return;
@@ -145,7 +145,7 @@ namespace DSPEmulator
             return new Equalizer(audio, eqParams);
         }
 
-        private static void readEqParams(string equalizerFilename)
+        private static void ReadEqParams(string equalizerFilename)
         {
             if(File.Exists(Path.Combine(Environment.CurrentDirectory, equalizerFilename)))
             {
@@ -168,7 +168,7 @@ namespace DSPEmulator
             
         }
 
-        private static void createEqualizerJson(string equalizerFilename)
+        private static void CreateEqualizerJson(string equalizerFilename)
         {
             var eqParams = new EqualizerParams();
             eqParams.LeftChannel.Add(new EqualizerBand
@@ -201,7 +201,7 @@ namespace DSPEmulator
             File.WriteAllText(Path.Combine(Environment.CurrentDirectory, equalizerFilename), jsonString);
         }
 
-        private static void getDelayValues()
+        private static void GetDelayValues()
         {
             try
             {
@@ -218,7 +218,7 @@ namespace DSPEmulator
             {
                 Console.WriteLine(ex.Message);
                 Console.WriteLine("Wrong input. Try again...");
-                getDelayValues();
+                GetDelayValues();
             }
         }
 
@@ -240,7 +240,7 @@ namespace DSPEmulator
             };
         }
 
-        private static void saveToMp3(string fileName, ISampleProvider audioToSave)
+        private static void SaveToMp3(string fileName, ISampleProvider audioToSave)
         {
             MediaFoundationEncoder.EncodeToMp3(audioToSave.ToWaveProvider(), fileName, 320000);
         }

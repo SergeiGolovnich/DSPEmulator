@@ -11,8 +11,8 @@ namespace DSPEmulatorUI.ViewModels
 {
     public class DelayEffectViewModel : Screen, IEffectProvider
     {
-        public double leftDelay { get; set; }
-        public double rightDelay { get; set; }
+        public double LeftDelay { get; set; }
+        public double RightDelay { get; set; }
 
         public DelayEffectViewModel()
         {
@@ -20,12 +20,12 @@ namespace DSPEmulatorUI.ViewModels
         }
         public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
         {
-            if(leftDelay == 0 && rightDelay == 0)
+            if(LeftDelay == 0 && RightDelay == 0)
             {
                 return sourceProvider;
             }
 
-            return new ChannelsDelaySampleProvider(sourceProvider) { LeftDelayMillisec = leftDelay, RightDelayMillisec = rightDelay };
+            return new ChannelsDelaySampleProvider(sourceProvider) { LeftDelayMillisec = LeftDelay, RightDelayMillisec = RightDelay };
         }
     }
 }

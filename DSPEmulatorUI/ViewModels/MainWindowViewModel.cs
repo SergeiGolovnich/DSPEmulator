@@ -13,8 +13,8 @@ namespace DSPEmulatorUI.ViewModels
         public object FilesView { get; } = new FilesViewModel();
         public object DSPView { get; } = new DSPViewModel();
 
-        public bool isPlaying { get; set; } = false;
-        private IWavePlayer wavePlayer = new WaveOutEvent();
+        public bool IsPlaying { get; set; } = false;
+        private readonly IWavePlayer wavePlayer = new WaveOutEvent();
 
         public MainWindowViewModel()
         {
@@ -28,11 +28,11 @@ namespace DSPEmulatorUI.ViewModels
 
         private void MainWindowViewModel_PreviewPlayEvent(object sender, EventArgs e)
         {
-            if (isPlaying)
+            if (IsPlaying)
             {
                 wavePlayer.Stop();
 
-                isPlaying = false;
+                IsPlaying = false;
             }
             else
             {
@@ -42,7 +42,7 @@ namespace DSPEmulatorUI.ViewModels
                 wavePlayer.Init(audio);
                 wavePlayer.Play();
 
-                isPlaying = true;
+                IsPlaying = true;
             }
         }
 
