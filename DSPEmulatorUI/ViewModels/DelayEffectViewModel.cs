@@ -18,8 +18,13 @@ namespace DSPEmulatorUI.ViewModels
         {
 
         }
-        public ISampleProvider EffectProvider(ISampleProvider sourceProvider)
+        public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
         {
+            if(leftDelay == 0 && rightDelay == 0)
+            {
+                return sourceProvider;
+            }
+
             return new ChannelsDelaySampleProvider(sourceProvider) { LeftDelayMillisec = leftDelay, RightDelayMillisec = rightDelay };
         }
     }

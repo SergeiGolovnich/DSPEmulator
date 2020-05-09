@@ -8,6 +8,6 @@ namespace DSPEmulatorLibrary
 {
     public interface IEffectProvider
     {
-        ISampleProvider EffectProvider(ISampleProvider sourceProvider);
+        ISampleProvider SampleProvider(ISampleProvider sourceProvider);
     }
 }

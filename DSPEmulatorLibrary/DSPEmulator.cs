@@ -16,7 +16,7 @@ namespace DSPEmulatorLibrary
 
             var stereoFile = convertToStereo(audioFile);
 
-            var processedAudio = effects.EffectProvider(stereoFile);
+            var processedAudio = effects.SampleProvider(stereoFile);
 
             saveToMp3(Path.Combine(outputFolder, $"{Path.GetFileNameWithoutExtension(inputFile)}.mp3"),
                             processedAudio);

@@ -16,13 +16,18 @@ namespace DSPEmulatorUI.ViewModels
             Items.Add(new EqualizerChannelViewModel("Left Channel"));
             Items.Add(new EqualizerChannelViewModel("Right Channel"));
         }
-        public ISampleProvider EffectProvider(ISampleProvider sourceProvider)
+        public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
         {
             var eqParams = new EqualizerParams()
             {
                 LeftChannel = ((EqualizerChannelViewModel)Items[0]).EqualizerBands,
                 RightChannel = ((EqualizerChannelViewModel)Items[1]).EqualizerBands
             };
+
+            if (eqParams.IsEmpty)
+            {
+                return sourceProvider;
+            }
 
             float adjustVolume = calcAdjustVolumeFromEq(eqParams);
             var adjusted = new ChannelsVolumeSampleProvider(sourceProvider)

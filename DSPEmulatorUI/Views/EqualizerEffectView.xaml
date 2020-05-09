@@ -17,7 +17,6 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical" Grid.ColumnSpan="2">
             <TextBlock FontWeight="Bold">Equalizer</TextBlock>
-            <Label Foreground="#FF4EC1F7" FontStyle="Italic" Opacity="0.8">Import</Label>
         </StackPanel>
 
         <TabControl  Grid.Row="1" Grid.ColumnSpan="2" x:Name="Items">

@@ -6,13 +6,8 @@ namespace DSPEmulatorLibrary.SampleProviders.Utils
 {
     public class EqualizerParams
     {
-        public EqualizerParams()
-        {
-            LeftChannel = new List<EqualizerBand>();
-            RightChannel = new List<EqualizerBand>();
-        }
-
-        public List<EqualizerBand> LeftChannel { get; set; }
-        public List<EqualizerBand> RightChannel { get; set; }
+        public List<EqualizerBand> LeftChannel { get; set; } = new List<EqualizerBand>();
+        public List<EqualizerBand> RightChannel { get; set; } = new List<EqualizerBand>();
+        public bool IsEmpty => LeftChannel.Count == 0 && RightChannel.Count == 0;
     }
 }

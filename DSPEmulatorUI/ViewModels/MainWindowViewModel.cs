@@ -4,16 +4,46 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using DSPEmulatorLibrary;
+using NAudio.Wave;
 
 namespace DSPEmulatorUI.ViewModels
 {
-    public class MainWindowViewModel : Conductor<IScreen>.Collection.AllActive
+    public class MainWindowViewModel : Conductor<object>.Collection.AllActive
     {
-        public IScreen FilesView { get; } = new FilesViewModel();
-        public IScreen DSPView { get; } = new DSPViewModel();
-        public MainWindowViewModel(): base(true)
+        public object FilesView { get; } = new FilesViewModel();
+        public object DSPView { get; } = new DSPViewModel();
+
+        public bool isPlaying { get; set; } = false;
+        private IWavePlayer wavePlayer = new WaveOutEvent();
+
+        public MainWindowViewModel()
         {
+            Items.Add(FilesView);
+            Items.Add(DSPView);
+
             ((FilesViewModel)FilesView).StartProcessEvent += MainWindowViewModel_StartProcessEvent;
+
+            ((FilesViewModel)FilesView).PreviewPlayEvent += MainWindowViewModel_PreviewPlayEvent;
+        }
+
+        private void MainWindowViewModel_PreviewPlayEvent(object sender, EventArgs e)
+        {
+            if (isPlaying)
+            {
+                wavePlayer.Stop();
+
+                isPlaying = false;
+            }
+            else
+            {
+                ISampleProvider audio = new AudioFileReader(((FilesViewModel)FilesView).SelectedFile);
+                audio = ((IEffectProvider)DSPView).SampleProvider(audio);
+
+                wavePlayer.Init(audio);
+                wavePlayer.Play();
+
+                isPlaying = true;
+            }
         }
 
         private void MainWindowViewModel_StartProcessEvent(object sender, EventArgs e)

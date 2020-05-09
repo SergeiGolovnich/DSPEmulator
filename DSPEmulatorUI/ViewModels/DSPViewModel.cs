@@ -18,12 +18,12 @@ namespace DSPEmulatorUI.ViewModels
             Items.Add(new EqualizerEffectViewModel());
         }
 
-        public ISampleProvider EffectProvider(ISampleProvider sourceProvider)
+        public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
         {
             ISampleProvider output = sourceProvider;
             foreach(IEffectProvider effect in Items)
             {
-                output = effect.EffectProvider(output);
+                output = effect.SampleProvider(output);
             }
             return output;
         }
