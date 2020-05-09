@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DSPEmulatorUI.Views"
         mc:Ignorable="d"
         Title="DSP Emulator" Height="450" Width="800"
-        FontFamily="Segou UI Light" FontSize="16" Icon="/Views/dsp_icon.png">
+        FontFamily="Segou UI Light" FontSize="16" Icon="/Views/Icons/dsp_icon.png">
     <TabControl x:Name="Items" TabStripPlacement="Left">
         <TabControl.ItemTemplate>
             <DataTemplate>

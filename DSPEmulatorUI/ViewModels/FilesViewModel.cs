@@ -12,7 +12,7 @@ namespace DSPEmulatorUI.ViewModels
     {
         private string _selectedFile;
 
-        public string ImagePath { get; } = "/Views/files_icon.png";
+        public string ImagePath { get; } = "/Views/Icons/files_icon.png";
         public BindableCollection<string> Files { get; set; } = new BindableCollection<string>();
         public string SelectedFile { get => _selectedFile; 
             set 

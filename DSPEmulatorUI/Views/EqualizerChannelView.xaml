@@ -12,7 +12,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Button HorizontalContentAlignment="Right" Height="20" Width="20" x:Name="AddBand" Background="{x:Null}" BorderThickness="0" HorizontalAlignment="Right">
-            <Image Source="/Views/plus2.png" ToolTip="Add Frequency Band"/>
+            <Image Source="/Views/Icons/plus2.png" ToolTip="Add Frequency Band"/>
         </Button>
 
         <ItemsControl HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" x:Name="Items" Grid.Row="1">

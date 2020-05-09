@@ -9,7 +9,7 @@ namespace DSPEmulatorUI.ViewModels
 {
     public class DSPViewModel : Conductor<IScreen>.Collection.AllActive, IEffectProvider
     {
-        public string ImagePath { get; } = "/Views/dsp_icon.png";
+        public string ImagePath { get; } = "/Views/Icons/dsp_icon.png";
         public DSPViewModel()
         {
             DisplayName = "DSP";

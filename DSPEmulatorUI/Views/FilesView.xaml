@@ -19,7 +19,7 @@
         <!--Column 0-->
         <TextBlock Text="Audio files: " VerticalAlignment="Bottom" HorizontalAlignment="Left" />
         <Button  x:Name="AddFiles" HorizontalAlignment="Right" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Margin="0,0,10,0" BorderThickness="0" Background="White">
-            <Image Source="/Views/plus.png" Width="25" Height="25" ToolTip="Add files" />
+            <Image Source="/Views/Icons/plus.png" Width="25" Height="25" ToolTip="Add files" />
         </Button>
         <ListBox x:Name="Files" Grid.Row="1" Margin="0,5,10,0" SelectionMode="Extended" Grid.RowSpan="2" SelectedItem="SelectedFile">
             <i:Interaction.Triggers>

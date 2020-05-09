@@ -8,7 +8,7 @@
     <Border Padding="1" Margin="1" BorderBrush="Gainsboro" BorderThickness="1">
     <StackPanel Orientation="Vertical">
         <Button x:Name="RemoveBand" Width="20" Height="20" BorderThickness="0" ToolTip="Remove Band" Background="{x:Null}">
-            <Image Source="/Views/cross.png" />
+            <Image Source="/Views/Icons/cross.png" />
         </Button>
         <TextBlock HorizontalAlignment="Center">Freq</TextBlock>
         <TextBox x:Name="Freq" HorizontalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}"></TextBox>
