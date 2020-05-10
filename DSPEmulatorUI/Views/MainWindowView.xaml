@@ -7,14 +7,21 @@
         mc:Ignorable="d"
         Title="DSP Emulator" Height="450" Width="800"
         FontFamily="Segou UI Light" FontSize="16" Icon="/Views/Icons/dsp_icon.png">
-    <TabControl x:Name="Items" TabStripPlacement="Left">
-        <TabControl.ItemTemplate>
-            <DataTemplate>
-                <StackPanel Margin="5" Orientation="Vertical">
-                    <Image Width="40" Source="{Binding ImagePath}" />
-                    <TextBlock TextAlignment="Center" Text="{Binding DisplayName}"/>
-                </StackPanel>
-            </DataTemplate>
-        </TabControl.ItemTemplate>
-    </TabControl>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" FontSize="14">
+            <MenuItem x:Name="LoadSession" Header="Load Session"></MenuItem>
+            <MenuItem x:Name="SaveSession" Header="Save Session"></MenuItem>
+        </Menu>
+        <TabControl x:Name="Items" TabStripPlacement="Left">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5" Orientation="Vertical">
+                        <Image Width="40" Source="{Binding ImagePath}" />
+                        <TextBlock TextAlignment="Center" Text="{Binding DisplayName}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+        </TabControl>
+    </DockPanel>
+    
 </Window>

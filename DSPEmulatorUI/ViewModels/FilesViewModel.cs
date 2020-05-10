@@ -1,18 +1,23 @@
 ﻿using Caliburn.Micro;
 using NAudio.Wave;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
 
 namespace DSPEmulatorUI.ViewModels
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class FilesViewModel : Screen
     {
         private string _selectedFile;
 
         public string ImagePath { get; } = "/Views/Icons/files_icon.png";
+        [JsonProperty]
         public BindableCollection<string> Files { get; set; } = new BindableCollection<string>();
         public string SelectedFile { get => _selectedFile; 
             set 
@@ -22,6 +27,7 @@ namespace DSPEmulatorUI.ViewModels
                 NotifyOfPropertyChange(() => CanPreviewBtn);
             } 
         }
+        [JsonProperty]
         public string OutputFolder { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 
         public event EventHandler StartProcessEvent;
@@ -119,6 +125,21 @@ namespace DSPEmulatorUI.ViewModels
                 return output;
             }
         }
-        
+
+        public void Deserialize(JToken jsonToken)
+        {
+            OutputFolder = jsonToken[nameof(OutputFolder)].Value<string>();
+            NotifyOfPropertyChange(() => OutputFolder);
+
+            List<JToken> files = jsonToken["Files"].Children().ToList();
+
+            Files.Clear();
+
+            foreach(JToken file in files)
+            {
+                Files.Add(file.Value<string>());
+            }
+        }
+
     }
 }

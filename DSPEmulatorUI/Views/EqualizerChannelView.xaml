@@ -11,7 +11,7 @@
             <RowDefinition Height="25"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Button HorizontalContentAlignment="Right" Height="20" Width="20" x:Name="AddBand" Background="{x:Null}" BorderThickness="0" HorizontalAlignment="Right">
+        <Button HorizontalContentAlignment="Right" Height="20" Width="20" x:Name="AddBandBtn" Background="{x:Null}" BorderThickness="0" HorizontalAlignment="Right">
             <Image Source="/Views/Icons/plus2.png" ToolTip="Add Frequency Band"/>
         </Button>
 

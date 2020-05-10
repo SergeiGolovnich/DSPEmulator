@@ -6,15 +6,29 @@ using DSPEmulatorLibrary;
 using NAudio.Wave;
 using DSPEmulatorLibrary.SampleProviders.Utils;
 using DSPEmulatorLibrary.SampleProviders;
+using Newtonsoft.Json;
+using System.Runtime.Serialization;
+using Newtonsoft.Json.Linq;
+using System.Linq;
 
 namespace DSPEmulatorUI.ViewModels
 {
-    public class EqualizerEffectViewModel : Conductor<IScreen>.Collection.AllActive, IEffectProvider
+    [Serializable()]
+    public class EqualizerEffectViewModel : Conductor<IScreen>.Collection.AllActive, IEffectProvider, ISerializable
     {
-        public EqualizerEffectViewModel() : base(true)
+        public string EffectType { get; set; } = typeof(EqualizerEffectViewModel).Name;
+        public EqualizerEffectViewModel()
         {
             Items.Add(new EqualizerChannelViewModel("Left Channel"));
             Items.Add(new EqualizerChannelViewModel("Right Channel"));
+        }
+
+        public EqualizerEffectViewModel(JToken jToken)
+        {
+            foreach(var channel in jToken["Items"].Children().ToList())
+            {
+                Items.Add(new EqualizerChannelViewModel(channel));
+            }
         }
         public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
         {
@@ -52,6 +66,12 @@ namespace DSPEmulatorUI.ViewModels
             }
 
             return -maxEqGain;
+        }
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Items", Items);
+            info.AddValue("EffectType", EffectType);
         }
     }
 }
