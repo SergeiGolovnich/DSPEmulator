@@ -13,7 +13,7 @@
         <TextBlock HorizontalAlignment="Center">Freq</TextBlock>
         <TextBox x:Name="Freq" HorizontalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}"></TextBox>
 
-        <Slider x:Name="Gain" Maximum="12" Minimum="-12" Orientation="Vertical" TickPlacement="TopLeft" Height="150" HorizontalAlignment="Center">
+        <Slider x:Name="Gain" Maximum="18" Minimum="-18" Orientation="Vertical" TickPlacement="TopLeft" Height="150" HorizontalAlignment="Center">
         </Slider>
         <TextBlock Text="{Binding ElementName=Gain, Path=Value, StringFormat={}{0:F1} db}" HorizontalAlignment="Center"/>
 
