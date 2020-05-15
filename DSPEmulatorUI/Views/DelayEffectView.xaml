@@ -16,7 +16,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.ColumnSpan="2" FontWeight="Bold">Channels delay</TextBlock>
+        <TextBlock Grid.ColumnSpan="2" FontWeight="Bold">Channels Delay</TextBlock>
 
 
         <TextBlock Grid.Row="1">Left channel delay, ms:</TextBlock>

@@ -9,6 +9,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Windows.Input;
+using DSPEmulatorUI.ViewModels;
 
 namespace DSPEmulatorUI.ViewModels
 {
@@ -16,6 +17,12 @@ namespace DSPEmulatorUI.ViewModels
     public class DSPViewModel : Conductor<IScreen>.Collection.AllActive, IEffectProvider, ISerializable
     {
         public string ImagePath { get; } = "/Views/Icons/dsp_icon.png";
+        public List<string> EffectsToAdd { get; set; } = new List<string>
+        {
+            "Add Effect",
+            "Channels Delay",
+            "Equalizer"
+        };
         public DSPViewModel()
         {
             DisplayName = "DSP";
@@ -27,7 +34,7 @@ namespace DSPEmulatorUI.ViewModels
         public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
         {
             ISampleProvider output = sourceProvider;
-            foreach(IEffectProvider effect in Items)
+            foreach (IEffectProvider effect in Items)
             {
                 output = effect.SampleProvider(output);
             }
@@ -70,6 +77,25 @@ namespace DSPEmulatorUI.ViewModels
             if (e.Key == Key.Delete && item != null)
             {
                 Items.Remove(item);
+            }
+        }
+        public void AddEffect(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return;
+            }
+
+            IScreen effect = name switch
+            {
+                "Channels Delay" => new DelayEffectViewModel(),
+                "Equalizer" => new EqualizerEffectViewModel(),
+                _ => null
+            };
+
+            if (effect != null)
+            {
+                Items.Add(effect);
             }
         }
     }

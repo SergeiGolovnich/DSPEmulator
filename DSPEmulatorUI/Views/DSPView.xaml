@@ -6,7 +6,17 @@
              xmlns:local="clr-namespace:DSPEmulatorUI.Views" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:cal="http://caliburnmicro.com"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <ListBox x:Name="Items">
+    <Grid>
+        <ComboBox x:Name="EffectsToAdd" SelectedIndex="0"  Width="150" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="1" Margin="3" ToolTip="Add Effect" >
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <cal:ActionMessage MethodName="AddEffect">
+                        <cal:Parameter Value="{Binding ElementName=EffectsToAdd, Path=SelectedItem}" />
+                    </cal:ActionMessage>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ComboBox>
+        <ListBox x:Name="Items">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="KeyUp">
                 <cal:ActionMessage MethodName="RemoveSelectedEffect">
@@ -16,4 +26,5 @@
             </i:EventTrigger>
         </i:Interaction.Triggers>
     </ListBox>
+    </Grid>
 </UserControl>
