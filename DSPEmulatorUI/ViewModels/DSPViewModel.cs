@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using System.Windows.Input;
 
 namespace DSPEmulatorUI.ViewModels
 {
@@ -62,6 +63,14 @@ namespace DSPEmulatorUI.ViewModels
                 _ => throw new Exception("Unknown effect type."),
             };
             return effectObj;
+        }
+
+        public void RemoveSelectedEffect(IScreen item, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete && item != null)
+            {
+                Items.Remove(item);
+            }
         }
     }
 }
