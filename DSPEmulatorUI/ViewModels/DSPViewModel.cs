@@ -16,7 +16,14 @@ namespace DSPEmulatorUI.ViewModels
     [Serializable()]
     public class DSPViewModel : Conductor<IScreen>.Collection.AllActive, IEffectProvider, ISerializable
     {
+        private int selectedEffectIndex = 0;
+
         public string ImagePath { get; } = "/Views/Icons/dsp_icon.png";
+        public int SelectedEffectIndex { get => selectedEffectIndex; 
+            set { 
+                selectedEffectIndex = value;
+                NotifyOfPropertyChange(() => SelectedEffectIndex);
+            } }
         public List<string> EffectsToAdd { get; set; } = new List<string>
         {
             "Add Effect",
@@ -97,6 +104,8 @@ namespace DSPEmulatorUI.ViewModels
             {
                 Items.Add(effect);
             }
+
+            SelectedEffectIndex = 0;
         }
     }
 }

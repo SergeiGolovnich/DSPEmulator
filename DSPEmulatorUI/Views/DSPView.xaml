@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ComboBox x:Name="EffectsToAdd" SelectedIndex="0"  Width="150" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="1" Margin="3" ToolTip="Add Effect" >
+        <ComboBox x:Name="EffectsToAdd" Width="150" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="1" Margin="3" ToolTip="Add Effect" SelectedIndex="{Binding SelectedEffectIndex, Mode=TwoWay}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <cal:ActionMessage MethodName="AddEffect">
