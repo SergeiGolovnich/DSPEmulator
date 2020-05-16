@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DSPEmulatorUI.Views"
         mc:Ignorable="d"
         Title="DSP Emulator" Height="450" Width="800"
-        FontFamily="Segou UI Light" FontSize="16" Icon="/Views/Icons/dsp_icon.png">
+        FontFamily="Segou UI Light" FontSize="16" Icon="/Views/Icons/dsp_icon.png" WindowStartupLocation="CenterScreen">
     <DockPanel>
         <Menu DockPanel.Dock="Top" FontSize="14">
             <MenuItem x:Name="LoadSession" Header="Load Session"></MenuItem>

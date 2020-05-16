@@ -9,6 +9,8 @@ using System.Windows;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using DSPEmulatorUI.Views;
+using System.ComponentModel;
 
 namespace DSPEmulatorUI.ViewModels
 {
@@ -19,6 +21,8 @@ namespace DSPEmulatorUI.ViewModels
 
         public bool IsPlaying { get; set; } = false;
         private readonly IWavePlayer wavePlayer = new WaveOutEvent();
+
+        private static BackgroundWorker backgroundWorker;
 
         public MainWindowViewModel()
         {
@@ -52,9 +56,31 @@ namespace DSPEmulatorUI.ViewModels
 
         private void MainWindowViewModel_StartProcessEvent(object sender, EventArgs e)
         {
-            foreach(string file in ((FilesViewModel)FilesView).Files)
+            backgroundWorker = new BackgroundWorker
             {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+            backgroundWorker.DoWork += BackgroundWorker_DoWork;
+
+            ProgressView progress = new ProgressView(backgroundWorker);
+            progress.ShowDialog();
+        }
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            int index = 1;
+            foreach (string file in ((FilesViewModel)FilesView).Files)
+            {
+                if (backgroundWorker.CancellationPending)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
                 DSPEmulator.ProcessFile(file, (DSPViewModel)DSPView, ((FilesViewModel)FilesView).OutputFolder);
+
+                backgroundWorker.ReportProgress(index++ * 100 / ((FilesViewModel)FilesView).Files.Count);
             }
         }
 
