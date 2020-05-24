@@ -15,6 +15,8 @@ namespace DSPEmulatorUI.ViewModels
     [JsonObject(MemberSerialization.OptIn)]
     public class DelayEffectViewModel : Screen, IEffectProvider
     {
+        [JsonProperty()]
+        public string EffectType { get; set; } = typeof(DelayEffectViewModel).Name;
         private ChannelsDelaySampleProvider delaySampleProvider;
         private double leftDelay;
         private double rightDelay;
@@ -42,8 +44,7 @@ namespace DSPEmulatorUI.ViewModels
                     delaySampleProvider.RightDelayMillisec = rightDelay;
                 }
             } }
-        [JsonProperty()]
-        public string EffectType { get; set; } = typeof(DelayEffectViewModel).Name;
+        
 
         public DelayEffectViewModel()
         {

@@ -28,7 +28,8 @@ namespace DSPEmulatorUI.ViewModels
         {
             "Add Effect",
             "Channels Delay",
-            "Equalizer"
+            "Equalizer",
+            "Channels Volume"
         };
         public DSPViewModel()
         {
@@ -36,6 +37,7 @@ namespace DSPEmulatorUI.ViewModels
 
             Items.Add(new DelayEffectViewModel());
             Items.Add(new EqualizerEffectViewModel());
+            Items.Add(new ChannelsVolumeEffectViewModel());
         }
 
         public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
@@ -74,6 +76,7 @@ namespace DSPEmulatorUI.ViewModels
             {
                 nameof(DelayEffectViewModel) => new DelayEffectViewModel(jsonToken),
                 nameof(EqualizerEffectViewModel) => new EqualizerEffectViewModel(jsonToken),
+                nameof(ChannelsVolumeEffectViewModel) => new ChannelsVolumeEffectViewModel(jsonToken),
                 _ => throw new Exception("Unknown effect type."),
             };
             return effectObj;
@@ -97,6 +100,7 @@ namespace DSPEmulatorUI.ViewModels
             {
                 "Channels Delay" => new DelayEffectViewModel(),
                 "Equalizer" => new EqualizerEffectViewModel(),
+                "Channels Volume" => new ChannelsVolumeEffectViewModel(),
                 _ => null
             };
 
