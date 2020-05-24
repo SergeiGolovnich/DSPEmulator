@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:DSPEmulatorUI.Views"
+             xmlns:local="clr-namespace:DSPEmulatorUI.Views" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:cal="http://caliburnmicro.com"
              mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -20,11 +20,14 @@
 
 
         <TextBlock Grid.Row="1">Left channel delay, ms:</TextBlock>
-        <TextBox Margin="2" Grid.Row="1" Grid.Column="1" MinWidth="50" x:Name="LeftDelay" ></TextBox>
+        <TextBox Margin="2" Grid.Row="1" Grid.Column="1" MinWidth="50" x:Name="LeftDelay" cal:Message.Attach="[Event KeyUp] = [Action LeftDelayChanged($eventArgs)]">
+        </TextBox>
 
 
         <TextBlock Grid.Row="2">Right channel delay, ms:</TextBlock>
-        <TextBox Margin="2" Grid.Row="2" Grid.Column="1" MinWidth="50" x:Name="RightDelay"></TextBox>
+        <TextBox Margin="2" Grid.Row="2" Grid.Column="1" MinWidth="50" x:Name="RightDelay" cal:Message.Attach="[Event KeyUp] = [Action RightDelayChanged($eventArgs)]">
+            
+        </TextBox>
 
     </Grid>
 </UserControl>

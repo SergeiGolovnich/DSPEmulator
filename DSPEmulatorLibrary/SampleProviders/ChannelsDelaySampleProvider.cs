@@ -25,26 +25,44 @@ namespace DSPEmulatorLibrary.SampleProviders
         }
         public double LeftDelayMillisec
         {
-            get { return SamplesToDoubleMillisec(leftDelayBySamples); }
-            set { leftDelayBySamples = MillisecToSamples(value); }
+            get { return SamplesToDoubleMillisec(LeftDelayBySamples); }
+            set { LeftDelayBySamples = MillisecToSamples(value); }
         }
 
         public double RightDelayMillisec
         {
-            get { return SamplesToDoubleMillisec(rightDelayBySamples); }
-            set { rightDelayBySamples = MillisecToSamples(value); }
+            get { return SamplesToDoubleMillisec(RightDelayBySamples); }
+            set { RightDelayBySamples = MillisecToSamples(value); }
         }
 
         public int LeftDelayBySamples
         {
             get { return leftDelayBySamples; }
-            set { leftDelayBySamples = value; }
+            set {
+                if(value < 0)
+                {
+                    RightDelayBySamples = -value;
+                }
+                else
+                {
+                    leftDelayBySamples = value;
+                }
+            }
         }
 
         public int RightDelayBySamples
         {
             get { return rightDelayBySamples; }
-            set { rightDelayBySamples = value; }
+            set {
+                if(value < 0)
+                {
+                    LeftDelayBySamples = -value;
+                }
+                else
+                {
+                    rightDelayBySamples = value;
+                }
+            }
         }
 
         private int MillisecToSamples(double time)
