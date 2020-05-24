@@ -7,8 +7,8 @@ namespace DSPEmulatorLibrary.SampleProviders
     public class EqualizerSampleProvider : ISampleProvider
     {
         private readonly ISampleProvider sourceProvider;
-        private readonly EqualizerBand[] leftBands, rightBands;
-        private readonly BiQuadFilter[] leftFilters, rightFilters;
+        private EqualizerBand[] leftBands, rightBands;
+        private BiQuadFilter[] leftFilters, rightFilters;
         private readonly int channels;
         private bool updated;
 
@@ -18,43 +18,40 @@ namespace DSPEmulatorLibrary.SampleProviders
         public EqualizerSampleProvider(ISampleProvider sourceProvider, EqualizerBand[] leftBands, EqualizerBand[] rightBands)
         {
             this.sourceProvider = sourceProvider;
+            channels = sourceProvider.WaveFormat.Channels;
+
             this.rightBands = rightBands;
             this.leftBands = leftBands;
 
-            channels = sourceProvider.WaveFormat.Channels;
-
-            leftFilters = new BiQuadFilter[leftBands.Length];
-            rightFilters = new BiQuadFilter[rightBands.Length];
             CreateFilters();
         }
 
         private void CreateFilters()
         {
+            leftFilters = new BiQuadFilter[leftBands.Length];
+            rightFilters = new BiQuadFilter[rightBands.Length];
+
             for (int bandIndex = 0; bandIndex < leftBands.Length; bandIndex++)
             {
                 var band = leftBands[bandIndex];
-
-                if (leftFilters[bandIndex] == null)
-                    leftFilters[bandIndex] = BiQuadFilter.PeakingEQ(sourceProvider.WaveFormat.SampleRate, band.Frequency, band.Bandwidth, band.Gain);
-                else
-                    leftFilters[bandIndex].SetPeakingEq(sourceProvider.WaveFormat.SampleRate, band.Frequency, band.Bandwidth, band.Gain);
+                
+                leftFilters[bandIndex] = BiQuadFilter.PeakingEQ(sourceProvider.WaveFormat.SampleRate, band.Frequency, band.Bandwidth, band.Gain);
             }
 
             for (int bandIndex = 0; bandIndex < rightBands.Length; bandIndex++)
             {
                 var band = rightBands[bandIndex];
-
-                if (rightFilters[bandIndex] == null)
-                    rightFilters[bandIndex] = BiQuadFilter.PeakingEQ(sourceProvider.WaveFormat.SampleRate, band.Frequency, band.Bandwidth, band.Gain);
-                else
-                    rightFilters[bandIndex].SetPeakingEq(sourceProvider.WaveFormat.SampleRate, band.Frequency, band.Bandwidth, band.Gain);
+                
+                rightFilters[bandIndex] = BiQuadFilter.PeakingEQ(sourceProvider.WaveFormat.SampleRate, band.Frequency, band.Bandwidth, band.Gain);
             }
         }
 
-        public void Update()
+        public void Update(EqualizerParams eqParams)
         {
             updated = true;
-            CreateFilters();
+
+            leftBands = eqParams.LeftChannel.ToArray();
+            rightBands = eqParams.RightChannel.ToArray();
         }
 
         public WaveFormat WaveFormat => sourceProvider.WaveFormat;
@@ -75,14 +72,14 @@ namespace DSPEmulatorLibrary.SampleProviders
 
                 if(ch == 0)
                 {
-                    for (int band = 0; band < leftBands.Length; band++)
+                    for (int band = 0; band < leftFilters.Length; band++)
                     {
                         buffer[offset + n] = leftFilters[band].Transform(buffer[offset + n]);
                     }
                 }
                 else
                 {
-                    for (int band = 0; band < rightBands.Length; band++)
+                    for (int band = 0; band < rightFilters.Length; band++)
                     {
                         buffer[offset + n] = rightFilters[band].Transform(buffer[offset + n]);
                     }
