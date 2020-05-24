@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -32,6 +33,16 @@ namespace DSPEmulatorUI.ViewModels
             {
                 AddBand(band);
             }
+
+            foreach(object band in Items)
+            {
+                ((EqualizerBandViewModel)band).PropertyChanged += EqualizerBandViewModel_PropertyChanged;
+            }
+        }
+
+        private void EqualizerBandViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            NotifyOfPropertyChange(() => Items);
         }
 
         private void RemoveBandEvent(object sender, EventArgs e)
@@ -39,6 +50,7 @@ namespace DSPEmulatorUI.ViewModels
             if(sender != null && sender is EqualizerBandViewModel)
             {
                 Items.Remove((EqualizerBandViewModel)sender);
+                ((EqualizerBandViewModel)sender).PropertyChanged -= EqualizerBandViewModel_PropertyChanged;
             }
         }
 
@@ -46,6 +58,7 @@ namespace DSPEmulatorUI.ViewModels
         {
             var band = new EqualizerBandViewModel(jToken);
             band.RemoveBandEvent += RemoveBandEvent;
+            band.PropertyChanged += EqualizerBandViewModel_PropertyChanged;
 
             Items.Add(band);
         }
@@ -53,6 +66,7 @@ namespace DSPEmulatorUI.ViewModels
         {
             var band = new EqualizerBandViewModel();
             band.RemoveBandEvent += RemoveBandEvent;
+            band.PropertyChanged += EqualizerBandViewModel_PropertyChanged;
 
             Items.Add(band);
         }

@@ -17,26 +17,43 @@ namespace DSPEmulatorUI.ViewModels
     public class EqualizerEffectViewModel : Conductor<IScreen>.Collection.AllActive, IEffectProvider, ISerializable
     {
         public string EffectType { get; set; } = typeof(EqualizerEffectViewModel).Name;
+        private EqualizerSampleProvider equalizerSampleProvider;
+        private ChannelsVolumeSampleProvider adjustedSampleProvider;
         public EqualizerEffectViewModel()
         {
             Items.Add(new EqualizerChannelViewModel("Left Channel"));
             Items.Add(new EqualizerChannelViewModel("Right Channel"));
+
+            Items[0].PropertyChanged += EqualizerChannelViewModel_PropertyChanged;
+            Items[1].PropertyChanged += EqualizerChannelViewModel_PropertyChanged;
         }
 
         public EqualizerEffectViewModel(JToken jToken)
         {
             foreach(var channel in jToken["Items"].Children().ToList())
             {
-                Items.Add(new EqualizerChannelViewModel(channel));
+                EqualizerChannelViewModel item = new EqualizerChannelViewModel(channel);
+                item.PropertyChanged += EqualizerChannelViewModel_PropertyChanged;
+
+                Items.Add(item);
             }
+        }
+        private void EqualizerChannelViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            EqualizerParams eqParams = GetEqParams();
+
+            float adjustVolume = CalcAdjustVolumeFromEq(eqParams);
+            if(adjustedSampleProvider != null)
+            {
+                adjustedSampleProvider.LeftChannelVolumeInDB = adjustVolume;
+                adjustedSampleProvider.RightChannelVolumeInDB = adjustVolume;
+            }
+
+            equalizerSampleProvider?.Update(eqParams);
         }
         public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
         {
-            var eqParams = new EqualizerParams()
-            {
-                LeftChannel = ((EqualizerChannelViewModel)Items[0]).EqualizerBands,
-                RightChannel = ((EqualizerChannelViewModel)Items[1]).EqualizerBands
-            };
+            EqualizerParams eqParams = GetEqParams();
 
             if (eqParams.IsEmpty)
             {
@@ -44,13 +61,22 @@ namespace DSPEmulatorUI.ViewModels
             }
 
             float adjustVolume = CalcAdjustVolumeFromEq(eqParams);
-            var adjusted = new ChannelsVolumeSampleProvider(sourceProvider)
+            adjustedSampleProvider = new ChannelsVolumeSampleProvider(sourceProvider)
             {
                 LeftChannelVolumeInDB = adjustVolume,
                 RightChannelVolumeInDB = adjustVolume
             };
 
-            return new EqualizerSampleProvider(adjusted, eqParams);
+            return equalizerSampleProvider ?? (equalizerSampleProvider = new EqualizerSampleProvider(adjustedSampleProvider, eqParams));
+        }
+
+        private EqualizerParams GetEqParams()
+        {
+            return new EqualizerParams()
+            {
+                LeftChannel = ((EqualizerChannelViewModel)Items[0]).EqualizerBands,
+                RightChannel = ((EqualizerChannelViewModel)Items[1]).EqualizerBands
+            };
         }
 
         private float CalcAdjustVolumeFromEq(EqualizerParams eqParams)
