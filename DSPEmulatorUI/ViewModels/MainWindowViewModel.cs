@@ -78,7 +78,11 @@ namespace DSPEmulatorUI.ViewModels
                     return;
                 }
 
-                DSPEmulator.ProcessFile(file, (DSPViewModel)DSPView, ((FilesViewModel)FilesView).OutputFolder);
+                try
+                {
+                    DSPEmulator.ProcessFile(file, (DSPViewModel)DSPView, ((FilesViewModel)FilesView).OutputFolder);
+                }
+                catch { }
 
                 backgroundWorker.ReportProgress(index++ * 100 / ((FilesViewModel)FilesView).Files.Count);
             }
