@@ -14,10 +14,28 @@ namespace DSPEmulatorUI.ViewModels
     [JsonObject(MemberSerialization.OptIn)]
     public class DelayEffectViewModel : Screen, IEffectProvider
     {
+        private ChannelsDelaySampleProvider delaySampleProvider;
+        private double leftDelay;
+        private double rightDelay;
+
         [JsonProperty()]
-        public double LeftDelay { get; set; }
+        public double LeftDelay { get => leftDelay; 
+            set { 
+                leftDelay = value;
+                if(delaySampleProvider != null)
+                {
+                    delaySampleProvider.LeftDelayMillisec = leftDelay;
+                }
+            } }
         [JsonProperty()]
-        public double RightDelay { get; set; }
+        public double RightDelay { get => rightDelay; 
+            set { 
+                rightDelay = value;
+                if (delaySampleProvider != null)
+                {
+                    delaySampleProvider.RightDelayMillisec = rightDelay;
+                }
+            } }
         [JsonProperty()]
         public string EffectType { get; set; } = typeof(DelayEffectViewModel).Name;
 
@@ -32,12 +50,7 @@ namespace DSPEmulatorUI.ViewModels
         }
         public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
         {
-            if(LeftDelay == 0 && RightDelay == 0)
-            {
-                return sourceProvider;
-            }
-
-            return new ChannelsDelaySampleProvider(sourceProvider) { LeftDelayMillisec = LeftDelay, RightDelayMillisec = RightDelay };
+            return delaySampleProvider = new ChannelsDelaySampleProvider(sourceProvider) { LeftDelayMillisec = LeftDelay, RightDelayMillisec = RightDelay };
         }
     }
 }

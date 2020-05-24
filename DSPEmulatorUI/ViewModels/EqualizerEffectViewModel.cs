@@ -55,11 +55,6 @@ namespace DSPEmulatorUI.ViewModels
         {
             EqualizerParams eqParams = GetEqParams();
 
-            if (eqParams.IsEmpty)
-            {
-                return sourceProvider;
-            }
-
             float adjustVolume = CalcAdjustVolumeFromEq(eqParams);
             adjustedSampleProvider = new ChannelsVolumeSampleProvider(sourceProvider)
             {
@@ -67,7 +62,7 @@ namespace DSPEmulatorUI.ViewModels
                 RightChannelVolumeInDB = adjustVolume
             };
 
-            return equalizerSampleProvider ?? (equalizerSampleProvider = new EqualizerSampleProvider(adjustedSampleProvider, eqParams));
+            return equalizerSampleProvider = new EqualizerSampleProvider(adjustedSampleProvider, eqParams);
         }
 
         private EqualizerParams GetEqParams()

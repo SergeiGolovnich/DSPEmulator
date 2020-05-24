@@ -12,8 +12,8 @@ namespace DSPEmulatorLibrary.SampleProviders
         private float[] sourceBuffer;
         private List<float> leftChannel = new List<float>(),
             rightChannel = new List<float>();
-        private List<float> leftChannelPrevious = new List<float>(),
-            rightChannelPrevious = new List<float>();
+        private List<float> leftChannelPreviousSamples = new List<float>(),
+            rightChannelPreviousSamples = new List<float>();
         private int leftDelayBySamples;
         private int rightDelayBySamples;
 
@@ -65,20 +65,20 @@ namespace DSPEmulatorLibrary.SampleProviders
             EnsureSourceBuffer(count);
             var samlesReadedFromSource = sourceProvider.Read(sourceBuffer, offset, count);
 
-            if (Math.Max(leftChannelPrevious.Count, rightChannelPrevious.Count) == 0 && samlesReadedFromSource == 0) return 0;
+            if (isEndOfSource(samlesReadedFromSource)) return 0;
 
             channelize(sourceBuffer, samlesReadedFromSource);
 
             delayChannel(leftChannel, leftDelayBySamples);
             delayChannel(rightChannel, rightDelayBySamples);
 
-            insertFromPrevious(leftChannel, leftChannelPrevious);
-            insertFromPrevious(rightChannel, rightChannelPrevious);
+            insertFromPrevious(leftChannel, leftChannelPreviousSamples);
+            insertFromPrevious(rightChannel, rightChannelPreviousSamples);
 
             if (samlesReadedFromSource != 0)
             {
-                fillPreviousSamples(leftChannel, leftChannelPrevious, leftDelayBySamples);
-                fillPreviousSamples(rightChannel, rightChannelPrevious, rightDelayBySamples);
+                fillPreviousSamples(leftChannel, leftChannelPreviousSamples, leftDelayBySamples);
+                fillPreviousSamples(rightChannel, rightChannelPreviousSamples, rightDelayBySamples);
 
                 leftChannel.RemoveRange(leftChannel.Count - leftDelayBySamples, leftDelayBySamples);
                 rightChannel.RemoveRange(rightChannel.Count - rightDelayBySamples, rightDelayBySamples);
@@ -86,12 +86,25 @@ namespace DSPEmulatorLibrary.SampleProviders
 
             var stereoBuffer = channelsToBuffer(leftChannel, rightChannel);
 
-            for(int i = 0; i < stereoBuffer.Length; ++i)
+            for (int i = 0; i < stereoBuffer.Length; ++i)
             {
-                buffer[i] = stereoBuffer[i];
+                buffer[offset + i] = stereoBuffer[offset + i];
             }
 
             return stereoBuffer.Length;
+        }
+
+        private bool isEndOfSource(int samlesReadedFromSource)
+        {
+            return Math.Max(leftChannelPreviousSamples.Count, rightChannelPreviousSamples.Count) == 0 && samlesReadedFromSource == 0;
+        }
+
+        private void EnsureSourceBuffer(int count)
+        {
+            if (sourceBuffer == null || sourceBuffer.Length < count)
+            {
+                sourceBuffer = new float[count];
+            }
         }
 
         private float[] channelsToBuffer(List<float> leftChannel, List<float> rightChannel)
@@ -149,12 +162,6 @@ namespace DSPEmulatorLibrary.SampleProviders
             }
         }
 
-        private void EnsureSourceBuffer(int count)
-        {
-            if (sourceBuffer == null || sourceBuffer.Length < count)
-            {
-                sourceBuffer = new float[count];
-            }
-        }
+        
     }
 }
