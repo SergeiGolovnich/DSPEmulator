@@ -16,8 +16,8 @@ namespace DSPEmulatorUI.ViewModels
 {
     public class MainWindowViewModel : Conductor<object>.Collection.AllActive
     {
-        public object FilesView { get; } = new FilesViewModel();
-        public object DSPView { get; } = new DSPViewModel();
+        public object FilesView { get; set; } = new FilesViewModel();
+        public object DSPView { get; set; } = new DSPViewModel();
 
         public bool IsPlaying { get; set; } = false;
         private readonly IWavePlayer wavePlayer = new WaveOutEvent();
@@ -29,9 +29,13 @@ namespace DSPEmulatorUI.ViewModels
             Items.Add(FilesView);
             Items.Add(DSPView);
 
-            ((FilesViewModel)FilesView).StartProcessEvent += MainWindowViewModel_StartProcessEvent;
+            subscribeToEvents();
+        }
 
-            ((FilesViewModel)FilesView).PreviewPlayEvent += MainWindowViewModel_PreviewPlayEvent;
+        private void subscribeToEvents()
+        {
+            ((FilesViewModel)Items[0]).StartProcessEvent += MainWindowViewModel_StartProcessEvent;
+            ((FilesViewModel)Items[0]).PreviewPlayEvent += MainWindowViewModel_PreviewPlayEvent;
         }
 
         private void MainWindowViewModel_PreviewPlayEvent(object sender, EventArgs e)
@@ -134,8 +138,26 @@ namespace DSPEmulatorUI.ViewModels
 
                 JObject jObject = JObject.Parse(input);
 
-                ((FilesViewModel)FilesView).Deserialize(jObject["FilesView"]);
-                ((DSPViewModel)DSPView).Deserialize(jObject["DSPView"]);
+                FilesViewModel newFilesView = new FilesViewModel();
+                DSPViewModel newDSPView = new DSPViewModel();
+
+                try
+                {
+                    newFilesView.Deserialize(jObject["FilesView"]);
+                    newDSPView.Deserialize(jObject["DSPView"]);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show($"Error On Loading Session: {ex.Message}");
+                    return;
+                }
+
+                Items.Clear();
+
+                Items.Add(newFilesView);
+                Items.Add(newDSPView);
+
+                subscribeToEvents();
             }
         }
     }
