@@ -7,16 +7,27 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ComboBox x:Name="EffectsToAdd" Width="150" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="1" Margin="3" ToolTip="Add Effect" SelectedIndex="{Binding SelectedEffectIndex, Mode=TwoWay}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <cal:ActionMessage MethodName="AddEffect">
-                        <cal:Parameter Value="{Binding ElementName=EffectsToAdd, Path=SelectedItem}" />
-                    </cal:ActionMessage>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </ComboBox>
-        <ListBox x:Name="Items">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="1" Margin="3">
+            <ComboBox x:Name="EffectsToAdd" Width="150" ToolTip="Add Effect" SelectedIndex="{Binding SelectedAddEffectIndex, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <cal:ActionMessage MethodName="AddEffect">
+                            <cal:Parameter Value="{Binding ElementName=EffectsToAdd, Path=SelectedItem}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+            <StackPanel Margin="0 3"  Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button BorderThickness="0" Background="White" Margin="5 0" x:Name="MoveEffectUp" ToolTip="Move Effect Up">
+                    <Image Width="20" Source="/Views/Icons/up-arrow.png"/>
+                </Button>
+                <Button BorderThickness="0" Background="White" x:Name="MoveEffectDown" ToolTip="Move Effect Down">
+                    <Image Width="20" Source="/Views/Icons/down-arrow.png" />
+                </Button>
+            </StackPanel>
+        </StackPanel>
+
+        <ListBox x:Name="Items" SelectedItem="{Binding SelectedEffect, Mode=TwoWay}">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="KeyUp">
                 <cal:ActionMessage MethodName="RemoveSelectedEffect">

@@ -16,14 +16,28 @@ namespace DSPEmulatorUI.ViewModels
     [Serializable()]
     public class DSPViewModel : Conductor<IScreen>.Collection.AllActive, IEffectProvider, ISerializable
     {
-        private int selectedEffectIndex = 0;
+        private int selectedAddEffectIndex = 0;
+        private IScreen selectedEffect;
 
         public string ImagePath { get; } = "/Views/Icons/dsp_icon.png";
-        public int SelectedEffectIndex { get => selectedEffectIndex; 
-            set { 
-                selectedEffectIndex = value;
-                NotifyOfPropertyChange(() => SelectedEffectIndex);
-            } }
+        public IScreen SelectedEffect { get => selectedEffect;
+            set
+            {
+                selectedEffect = value;
+                NotifyOfPropertyChange(() => SelectedEffect);
+                NotifyOfPropertyChange(() => CanMoveEffectDown);
+                NotifyOfPropertyChange(() => CanMoveEffectUp);
+            } 
+        }
+        public int SelectedAddEffectIndex
+        {
+            get => selectedAddEffectIndex;
+            set
+            {
+                selectedAddEffectIndex = value;
+                NotifyOfPropertyChange(() => SelectedAddEffectIndex);
+            }
+        }
         public List<string> EffectsToAdd { get; set; } = new List<string>
         {
             "Add Effect",
@@ -112,7 +126,68 @@ namespace DSPEmulatorUI.ViewModels
                 Items.Add(effect);
             }
 
-            SelectedEffectIndex = 0;
+            SelectedAddEffectIndex = 0;
+        }
+
+        public void MoveEffectUp()
+        {
+            if(SelectedEffect != null && Items.IndexOf(SelectedEffect) != 0)
+            {
+                IScreen currentEffect = SelectedEffect;
+                int currentEffectIndex = Items.IndexOf(SelectedEffect);
+
+                Items.RemoveAt(currentEffectIndex);
+
+                Items.Insert(currentEffectIndex - 1, currentEffect);
+
+                SelectedEffect = currentEffect;
+            }
+        }
+        public bool CanMoveEffectUp
+        {
+            get
+            {
+                if(selectedEffect == null)
+                {
+                    return false;
+                }
+                else if(Items.IndexOf(SelectedEffect) == 0)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+        public void MoveEffectDown()
+        {
+            if (SelectedEffect != null && Items.IndexOf(SelectedEffect) != (Items.Count - 1))
+            {
+                IScreen currentEffect = SelectedEffect;
+                int currentEffectIndex = Items.IndexOf(SelectedEffect);
+
+                Items.RemoveAt(currentEffectIndex);
+
+                Items.Insert(currentEffectIndex + 1, currentEffect);
+
+                SelectedEffect = currentEffect;
+            }
+        }
+        public bool CanMoveEffectDown
+        { 
+            get
+            {
+                if (SelectedEffect == null)
+                {
+                    return false;
+                }
+                else if(Items.IndexOf(SelectedEffect) == (Items.Count - 1))
+                {
+                    return false;
+                }
+
+                return true;
+            } 
         }
     }
 }
