@@ -40,7 +40,15 @@ namespace DSPEmulatorUI.ViewModels
         }
         private void EqualizerChannelViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            EqualizerParams eqParams = GetEqParams();
+            EqualizerParams eqParams;
+            try
+            {
+                eqParams = GetEqParams();
+            }
+            catch
+            {
+                return;
+            }
 
             float adjustVolume = CalcAdjustVolumeFromEq(eqParams);
             if(adjustedSampleProvider != null)
@@ -67,6 +75,11 @@ namespace DSPEmulatorUI.ViewModels
 
         private EqualizerParams GetEqParams()
         {
+            if(Items.Count != 2)
+            {
+                throw new Exception("Must be 2 eq channels.");
+            }
+
             return new EqualizerParams()
             {
                 LeftChannel = ((EqualizerChannelViewModel)Items[0]).EqualizerBands,
