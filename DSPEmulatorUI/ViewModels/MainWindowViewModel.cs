@@ -16,8 +16,8 @@ namespace DSPEmulatorUI.ViewModels
 {
     public class MainWindowViewModel : Conductor<object>.Collection.AllActive
     {
-        public object FilesView { get; set; } = new FilesViewModel();
-        public object DSPView { get; set; } = new DSPViewModel();
+        public object FilesView { get => Items[0]; set { Items[0] = value; } }
+        public object DSPView { get => Items[1]; set { Items[1] = value; } }
 
         public bool IsPlaying { get; set; } = false;
         private readonly IWavePlayer wavePlayer = new WaveOutEvent();
@@ -26,21 +26,21 @@ namespace DSPEmulatorUI.ViewModels
 
         public MainWindowViewModel()
         {
-            Items.Add(FilesView);
-            Items.Add(DSPView);
+            Items.Add(new FilesViewModel());
+            Items.Add(new DSPViewModel());
 
             subscribeToEvents();
         }
 
         private void subscribeToEvents()
         {
-            ((FilesViewModel)Items[0]).StartProcessEvent += MainWindowViewModel_StartProcessEvent;
-            ((FilesViewModel)Items[0]).PreviewPlayEvent += MainWindowViewModel_PreviewPlayEvent;
+            ((FilesViewModel)FilesView).StartProcessEvent += MainWindowViewModel_StartProcessEvent;
+            ((FilesViewModel)FilesView).PreviewPlayEvent += MainWindowViewModel_PreviewPlayEvent;
         }
 
         private void MainWindowViewModel_PreviewPlayEvent(object sender, EventArgs e)
         {
-            if (IsPlaying)
+            if (IsPlaying || wavePlayer.PlaybackState == PlaybackState.Playing)
             {
                 wavePlayer.Stop();
 
@@ -48,13 +48,21 @@ namespace DSPEmulatorUI.ViewModels
             }
             else
             {
-                ISampleProvider audio = new AudioFileReader(((FilesViewModel)FilesView).SelectedFile);
-                audio = ((IEffectProvider)DSPView).SampleProvider(audio);
+                try
+                {
+                    ISampleProvider audio = new AudioFileReader(((FilesViewModel)FilesView).SelectedFile);
+                    audio = ((IEffectProvider)DSPView).SampleProvider(audio);
 
-                wavePlayer.Init(audio);
-                wavePlayer.Play();
+                    wavePlayer.Init(audio);
+                    wavePlayer.Play();
 
-                IsPlaying = true;
+                    IsPlaying = true;
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show($"Error On Playing Preview: {ex.Message}", "Error");
+                }
+                
             }
         }
 
@@ -104,15 +112,22 @@ namespace DSPEmulatorUI.ViewModels
 
             if (dialog.ShowDialog() == true)
             {
-                Newtonsoft.Json.Linq.JToken jsonFilesView = JToken.FromObject((FilesViewModel)FilesView);
-                Newtonsoft.Json.Linq.JToken jsonDSPView = JToken.FromObject(((DSPViewModel)DSPView));
+                try
+                {
+                    Newtonsoft.Json.Linq.JToken jsonFilesView = JToken.FromObject((FilesViewModel)FilesView);
+                    Newtonsoft.Json.Linq.JToken jsonDSPView = JToken.FromObject(((DSPViewModel)DSPView));
 
-                JObject session = new JObject();
-                session.Add("FilesView", jsonFilesView);
-                session.Add("DSPView", jsonDSPView);
+                    JObject session = new JObject();
+                    session.Add("FilesView", jsonFilesView);
+                    session.Add("DSPView", jsonDSPView);
 
-                string output = JsonConvert.SerializeObject(session);
-                File.WriteAllText(dialog.FileName, output);
+                    string output = JsonConvert.SerializeObject(session);
+                    File.WriteAllText(dialog.FileName, output);
+                }catch(Exception ex)
+                {
+                    MessageBox.Show($"Error On Saving Session: {ex.Message}", "Error");
+                }
+                
             }
         }
 
@@ -148,7 +163,7 @@ namespace DSPEmulatorUI.ViewModels
                 }
                 catch(Exception ex)
                 {
-                    MessageBox.Show($"Error On Loading Session: {ex.Message}");
+                    MessageBox.Show($"Error On Loading Session: {ex.Message}", "Error");
                     return;
                 }
 
