@@ -44,7 +44,7 @@ namespace DSPEmulatorUI.ViewModels
             "Channels Delay",
             "Equalizer",
             "Channels Volume",
-            "Signal Definition"
+            "Signal Quality Reducer"
         };
         public DSPViewModel()
         {
@@ -92,7 +92,7 @@ namespace DSPEmulatorUI.ViewModels
                 nameof(DelayEffectViewModel) => new DelayEffectViewModel(jsonToken),
                 nameof(EqualizerEffectViewModel) => new EqualizerEffectViewModel(jsonToken),
                 nameof(ChannelsVolumeEffectViewModel) => new ChannelsVolumeEffectViewModel(jsonToken),
-                nameof(SignalDefinitionEffectViewModel) => new SignalDefinitionEffectViewModel(jsonToken),
+                nameof(SignalQualityReducerEffectViewModel) => new SignalQualityReducerEffectViewModel(jsonToken),
                 _ => throw new Exception("Unknown effect type."),
             };
             return effectObj;
@@ -117,7 +117,7 @@ namespace DSPEmulatorUI.ViewModels
                 "Channels Delay" => new DelayEffectViewModel(),
                 "Equalizer" => new EqualizerEffectViewModel(),
                 "Channels Volume" => new ChannelsVolumeEffectViewModel(),
-                "Signal Definition" => new SignalDefinitionEffectViewModel(),
+                "Signal Quality Reducer" => new SignalQualityReducerEffectViewModel(),
                 _ => null
             };
 

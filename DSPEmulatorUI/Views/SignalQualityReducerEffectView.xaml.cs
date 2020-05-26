@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace DSPEmulatorUI.Views
 {
     /// <summary>
-    /// Логика взаимодействия для SignalDefinitionEffectView.xaml
+    /// Логика взаимодействия для SignalQualityReducerEffectView.xaml
     /// </summary>
-    public partial class SignalDefinitionEffectView : UserControl
+    public partial class SignalQualityReducerEffectView : UserControl
     {
-        public SignalDefinitionEffectView()
+        public SignalQualityReducerEffectView()
         {
             InitializeComponent();
         }
