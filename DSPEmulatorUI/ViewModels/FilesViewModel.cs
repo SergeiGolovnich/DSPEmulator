@@ -159,6 +159,12 @@ namespace DSPEmulatorUI.ViewModels
                 }
             }
         }
-
+        public void Files_MouseDoubleClick(MouseButtonEventArgs e)
+        {
+            if(CanPreviewBtn)
+            {
+                PreviewBtn();
+            }
+        }
     }
 }
