@@ -21,6 +21,7 @@ namespace DSPEmulatorUI.ViewModels
 
         public bool IsPlaying { get; set; } = false;
         private readonly IWavePlayer wavePlayer = new WaveOutEvent();
+        private AudioFileReader audioFile;
 
         private static BackgroundWorker backgroundWorker;
 
@@ -28,8 +29,44 @@ namespace DSPEmulatorUI.ViewModels
         {
             Items.Add(new FilesViewModel());
             Items.Add(new DSPViewModel());
-
             subscribeToEvents();
+
+            wavePlayer.PlaybackStopped += WavePlayer_PlaybackStopped;
+        }
+
+        private void WavePlayer_PlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            if (!IsPlaying || wavePlayer.PlaybackState == PlaybackState.Playing)
+            {
+                return;
+            }
+
+            try
+            {
+                var currFileInd = ((FilesViewModel)FilesView).Files.IndexOf(audioFile.FileName);
+
+                if(currFileInd < 0 && ((FilesViewModel)FilesView).SelectedFile == null)
+                {
+                    StopPreview();
+
+                    return;
+                }
+
+                if(((FilesViewModel)FilesView).Files.Count <= (currFileInd + 1))
+                {
+                    StopPreview();
+
+                    return;
+                }
+
+                ((FilesViewModel)FilesView).SelectedFile = ((FilesViewModel)FilesView).Files[currFileInd + 1];
+
+                PlayPreview();
+            }
+            catch
+            {
+                StopPreview();
+            }
         }
 
         private void subscribeToEvents()
@@ -40,29 +77,55 @@ namespace DSPEmulatorUI.ViewModels
 
         private void MainWindowViewModel_PreviewPlayEvent(object sender, EventArgs e)
         {
-            if (IsPlaying || wavePlayer.PlaybackState == PlaybackState.Playing)
+            if (audioFile == null)
             {
-                wavePlayer.Stop();
+                PlayPreview();
+                return;
+            }
 
-                IsPlaying = false;
+            if (isAudioPlayingAndSelectedAtSameTime())
+            {
+                StopPreview();
             }
             else
             {
-                try
-                {
-                    ISampleProvider audio = new AudioFileReader(((FilesViewModel)FilesView).SelectedFile);
-                    audio = ((IEffectProvider)DSPView).SampleProvider(audio);
+                StopPreview();
 
-                    wavePlayer.Init(audio);
-                    wavePlayer.Play();
+                PlayPreview();
+            }
 
-                    IsPlaying = true;
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show($"Error On Playing Preview: {ex.Message}", "Error");
-                }
-                
+            bool isAudioPlayingAndSelectedAtSameTime()
+            {
+                return (IsPlaying || wavePlayer.PlaybackState == PlaybackState.Playing)
+                                && (audioFile.FileName == ((FilesViewModel)FilesView).SelectedFile);
+            }
+        }
+
+        private void StopPreview()
+        {
+            IsPlaying = false;
+
+            wavePlayer.Stop();
+        }
+
+        private void PlayPreview()
+        {
+            try
+            {
+                audioFile = new AudioFileReader(((FilesViewModel)FilesView).SelectedFile);
+
+                ISampleProvider audio = audioFile;
+
+                audio = ((IEffectProvider)DSPView).SampleProvider(audio);
+
+                wavePlayer.Init(audio);
+                wavePlayer.Play();
+
+                IsPlaying = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error On Playing Preview: {ex.Message}", "Error");
             }
         }
 

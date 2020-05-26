@@ -49,13 +49,13 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBox IsReadOnly="True" x:Name="OutputFolder" VerticalAlignment="Top" />
-            <Button Grid.Row="1" x:Name="SetOutputFolder" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Set Output Folder" Margin="0,10,0,0"/>
+            <TextBox IsReadOnly="True" x:Name="OutputFolder" VerticalAlignment="Top" Padding="5 2"/>
+            <Button Grid.Row="1" x:Name="SetOutputFolder" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Set Output Folder" Margin="0,10,0,0" Padding="10 5"/>
         </Grid>
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-            <TextBlock>Preview:</TextBlock>
-            <Button x:Name="PreviewBtn">Play</Button>
+            <TextBlock HorizontalAlignment="Left">Preview:</TextBlock>
+            <Button HorizontalAlignment="Left" x:Name="PreviewBtn" Padding="3">Play/Stop</Button>
         </StackPanel>
-        <Button x:Name="StartProcess" Grid.Column="1" Grid.Row="2" Height="30" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,5,5">Start Process</Button>
+        <Button x:Name="StartProcess" Grid.Column="1" Grid.Row="2" Padding="20 10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,5,5">Start Process</Button>
     </Grid>
 </UserControl>
