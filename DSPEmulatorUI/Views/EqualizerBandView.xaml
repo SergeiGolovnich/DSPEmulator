@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:DSPEmulatorUI.Views"
+             xmlns:local="clr-namespace:DSPEmulatorUI.Views" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:cal="http://caliburnmicro.com"
              mc:Ignorable="d">
     <Border Padding="1" Margin="1" BorderBrush="Gainsboro" BorderThickness="1">
     <StackPanel Orientation="Vertical">
@@ -11,14 +11,14 @@
             <Image Source="/Views/Icons/cross.png" />
         </Button>
         <TextBlock HorizontalAlignment="Center">Freq</TextBlock>
-        <TextBox x:Name="Freq" HorizontalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}"></TextBox>
+            <TextBox x:Name="Freq" HorizontalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" cal:Message.Attach="[Event KeyUp] = [Action FreqChanged($eventArgs)]"></TextBox>
 
         <Slider x:Name="Gain" Maximum="18" Minimum="-18" Orientation="Vertical" TickPlacement="TopLeft" Height="150" HorizontalAlignment="Center">
         </Slider>
         <TextBlock Text="{Binding ElementName=Gain, Path=Value, StringFormat={}{0:F1} db}" HorizontalAlignment="Center"/>
 
         <TextBlock HorizontalAlignment="Center">Q</TextBlock>
-        <TextBox x:Name="Q" HorizontalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}"></TextBox>
+            <TextBox x:Name="Q" HorizontalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" cal:Message.Attach="[Event KeyUp] = [Action QChanged($eventArgs)]"></TextBox>
     </StackPanel>
     </Border>
 </UserControl>
