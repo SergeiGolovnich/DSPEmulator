@@ -22,6 +22,5 @@ namespace DSPEmulatorUI.Views
         {
             InitializeComponent();
         }
-
     }
 }

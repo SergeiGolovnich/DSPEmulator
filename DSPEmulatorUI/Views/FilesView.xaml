@@ -21,11 +21,16 @@
         <Button  x:Name="AddFiles" HorizontalAlignment="Right" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Margin="0,0,10,0" BorderThickness="0" Background="White">
             <Image Source="/Views/Icons/plus.png" Width="25" Height="25" ToolTip="Add files" />
         </Button>
-        <ListBox x:Name="Files" Grid.Row="1" Margin="0,5,10,0" SelectionMode="Extended" Grid.RowSpan="2" SelectedItem="SelectedFile">
+        <ListBox x:Name="Files" Grid.Row="1" Margin="0,5,10,0" SelectionMode="Extended" Grid.RowSpan="2" SelectedItem="SelectedFile" AllowDrop="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="KeyUp">
                     <cal:ActionMessage MethodName="RemoveSelectedItems">
                         <cal:Parameter Value="{Binding ElementName=Files, Path=SelectedItems}" />
+                        <cal:Parameter Value="$eventArgs" />
+                    </cal:ActionMessage>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="Drop">
+                    <cal:ActionMessage MethodName="Files_Drop">
                         <cal:Parameter Value="$eventArgs" />
                     </cal:ActionMessage>
                 </i:EventTrigger>

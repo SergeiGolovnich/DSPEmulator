@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 
 namespace DSPEmulatorUI.ViewModels
@@ -53,11 +54,16 @@ namespace DSPEmulatorUI.ViewModels
             {
                 foreach (string filePath in dialog.FileNames)
                 {
-                    if (!Files.Contains(filePath))
-                    {
-                        Files.Add(filePath);
-                    }
+                    AddFile(filePath);
                 }
+            }
+        }
+
+        private void AddFile(string filePath)
+        {
+            if (!Files.Contains(filePath))
+            {
+                Files.Add(filePath);
             }
         }
 
@@ -138,6 +144,19 @@ namespace DSPEmulatorUI.ViewModels
             foreach(JToken file in files)
             {
                 Files.Add(file.Value<string>());
+            }
+        }
+
+        public void Files_Drop(DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var dropData = e.Data.GetData(DataFormats.FileDrop) as string[];
+
+                foreach(string file in dropData)
+                {
+                    AddFile(file);
+                }
             }
         }
 
