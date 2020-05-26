@@ -7,7 +7,8 @@
              mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -16,12 +17,15 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.ColumnSpan="2" FontWeight="Bold">Signal Quality Reducer</TextBlock>
-
-        <StackPanel Margin="2" Orientation="Horizontal" Grid.Row="1">
+        
+        <TextBlock Grid.Row="1" Text="Bit Depth: " HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <StackPanel Margin="2" Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
             <Slider x:Name="BitDepth" Maximum="16" Minimum="1" Orientation="Horizontal" Width="150" HorizontalAlignment="Center" SmallChange="1" TickPlacement="Both" IsDirectionReversed="True"/>
-            <TextBlock Text="{Binding ElementName=BitDepth, Path=Value, StringFormat={}{0} Bit Depth}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding ElementName=BitDepth, Path=Value, StringFormat={}{0} Bit}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
         </StackPanel>
-        <StackPanel Margin="2" Orientation="Horizontal" Grid.Row="2">
+
+        <TextBlock Grid.Row="2" Text="Sample Rate: " HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <StackPanel Grid.Row="2" Grid.Column="1" Margin="2" Orientation="Horizontal">
             <Slider x:Name="SampleRate" Maximum="44100" Minimum="1" Orientation="Horizontal" Width="150" HorizontalAlignment="Center" SmallChange="100" TickPlacement="Both" IsDirectionReversed="True" LargeChange="1000"/>
             <TextBlock Text="{Binding ElementName=SampleRate, Path=Value, StringFormat={}{0} kHz}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
         </StackPanel>
