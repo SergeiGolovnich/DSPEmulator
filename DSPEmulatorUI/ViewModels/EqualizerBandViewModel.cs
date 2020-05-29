@@ -25,9 +25,9 @@ namespace DSPEmulatorUI.ViewModels
             get => freq; 
             set
             {
-                if(value < 20)
+                if(value < 1)
                 {
-                    freq = 20;
+                    freq = 1;
                 }else if(value > 20000)
                 {
                     freq = 20000;
