@@ -53,9 +53,9 @@ namespace DSPEmulatorUI.ViewModels
             get => q; 
             set 
             {
-                if (value < 0)
+                if (value < 0.5)
                 {
-                    q = 0;
+                    q = 0.5f;
                 }
                 else
                 {
@@ -84,6 +84,12 @@ namespace DSPEmulatorUI.ViewModels
             get
             {
                 return new EqualizerBand() { Frequency = Freq, Gain = Gain, Bandwidth = Q };
+            }
+            set
+            {
+                Freq = (int)value.Frequency;
+                Gain = value.Gain;
+                Q = value.Bandwidth;
             }
         }
 

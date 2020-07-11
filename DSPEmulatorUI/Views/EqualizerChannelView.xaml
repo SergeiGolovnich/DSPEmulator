@@ -11,6 +11,9 @@
             <RowDefinition Height="25"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+
+        <Button x:Name="ImportFromREW" ToolTip="Import Equalizer Settings From Room Eq Wizard" FontStyle="Italic" FontSize="10" HorizontalAlignment="Left" Background="{x:Null}" BorderBrush="{x:Null}" Padding="0,0,0,0">Import From REW</Button>
+        
         <Button HorizontalContentAlignment="Right" Height="20" Width="20" x:Name="AddBandBtn" Background="{x:Null}" BorderThickness="0" HorizontalAlignment="Right">
             <Image Source="/Views/Icons/plus2.png" ToolTip="Add Frequency Band"/>
         </Button>
