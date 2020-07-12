@@ -44,7 +44,8 @@ namespace DSPEmulatorUI.ViewModels
             "Channels Delay",
             "Equalizer",
             "Channels Volume",
-            "Signal Quality Reducer"
+            "Signal Quality Reducer",
+            "Phase Switch"
         };
         public DSPViewModel()
         {
@@ -93,6 +94,7 @@ namespace DSPEmulatorUI.ViewModels
                 nameof(EqualizerEffectViewModel) => new EqualizerEffectViewModel(jsonToken),
                 nameof(ChannelsVolumeEffectViewModel) => new ChannelsVolumeEffectViewModel(jsonToken),
                 nameof(SignalQualityReducerEffectViewModel) => new SignalQualityReducerEffectViewModel(jsonToken),
+                nameof(PhaseSwitchEffectViewModel) => new PhaseSwitchEffectViewModel(jsonToken),
                 _ => throw new Exception("Unknown effect type."),
             };
             return effectObj;
@@ -118,6 +120,7 @@ namespace DSPEmulatorUI.ViewModels
                 "Equalizer" => new EqualizerEffectViewModel(),
                 "Channels Volume" => new ChannelsVolumeEffectViewModel(),
                 "Signal Quality Reducer" => new SignalQualityReducerEffectViewModel(),
+                "Phase Switch" => new PhaseSwitchEffectViewModel(),
                 _ => null
             };
 
