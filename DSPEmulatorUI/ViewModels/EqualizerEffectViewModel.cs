@@ -14,9 +14,10 @@ using System.Linq;
 namespace DSPEmulatorUI.ViewModels
 {
     [Serializable()]
-    public class EqualizerEffectViewModel : Conductor<IScreen>.Collection.AllActive, IEffectProvider, ISerializable
+    public class EqualizerEffectViewModel : Conductor<IScreen>.Collection.AllActive, IEffect, ISerializable
     {
         public string EffectType { get; set; } = typeof(EqualizerEffectViewModel).Name;
+        public string EffectDisplayName => "Equalizer";
         private EqualizerSampleProvider equalizerSampleProvider;
         private ChannelsVolumeSampleProvider adjustedSampleProvider;
         public EqualizerEffectViewModel()

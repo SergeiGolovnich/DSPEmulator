@@ -19,6 +19,8 @@ namespace DSPEmulatorUI.ViewModels
         private int selectedAddEffectIndex = 0;
         private IScreen selectedEffect;
 
+        private EffectsFactory effectsFactory = new EffectsFactory();
+
         public string ImagePath { get; } = "/Views/Icons/dsp_icon.png";
         public IScreen SelectedEffect { get => selectedEffect;
             set
@@ -40,13 +42,7 @@ namespace DSPEmulatorUI.ViewModels
         }
         public List<string> EffectsToAdd { get; set; } = new List<string>
         {
-            "Add Effect",
-            "Channels Delay",
-            "Equalizer",
-            "Channels Volume",
-            "Signal Quality Reducer",
-            "Phase Switch",
-            "Pass Filters"
+            "Add Effect"
         };
         public DSPViewModel()
         {
@@ -55,6 +51,8 @@ namespace DSPEmulatorUI.ViewModels
             Items.Add(new DelayEffectViewModel());
             Items.Add(new EqualizerEffectViewModel());
             Items.Add(new ChannelsVolumeEffectViewModel());
+
+            EffectsToAdd.AddRange(effectsFactory.EffectsNames);
         }
 
         public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
@@ -80,26 +78,8 @@ namespace DSPEmulatorUI.ViewModels
 
             foreach (JToken effect in Effects)
             {
-                Items.Add((IScreen)DeserializeEffect(effect));
+                Items.Add((IScreen)effectsFactory.DeserializeEffect(effect));
             }
-        }
-
-        private object DeserializeEffect(JToken jsonToken)
-        {
-            object effectObj = null;
-            string type = jsonToken["EffectType"].Value<string>();
-
-            effectObj = type switch
-            {
-                nameof(DelayEffectViewModel) => new DelayEffectViewModel(jsonToken),
-                nameof(EqualizerEffectViewModel) => new EqualizerEffectViewModel(jsonToken),
-                nameof(ChannelsVolumeEffectViewModel) => new ChannelsVolumeEffectViewModel(jsonToken),
-                nameof(SignalQualityReducerEffectViewModel) => new SignalQualityReducerEffectViewModel(jsonToken),
-                nameof(PhaseSwitchEffectViewModel) => new PhaseSwitchEffectViewModel(jsonToken),
-                nameof(PassFiltersEffectViewModel) => new PassFiltersEffectViewModel(jsonToken),
-_ => throw new Exception("Unknown effect type."),
-            };
-            return effectObj;
         }
 
         public void RemoveSelectedEffect(IScreen item, KeyEventArgs e)
@@ -116,16 +96,7 @@ _ => throw new Exception("Unknown effect type."),
                 return;
             }
 
-            IScreen effect = name switch
-            {
-                "Channels Delay" => new DelayEffectViewModel(),
-                "Equalizer" => new EqualizerEffectViewModel(),
-                "Channels Volume" => new ChannelsVolumeEffectViewModel(),
-                "Signal Quality Reducer" => new SignalQualityReducerEffectViewModel(),
-                "Phase Switch" => new PhaseSwitchEffectViewModel(),
-                "Pass Filters" => new PassFiltersEffectViewModel(),
-                _ => null
-            };
+            IScreen effect = (IScreen)effectsFactory.CreateEffect(name);
 
             if (effect != null)
             {

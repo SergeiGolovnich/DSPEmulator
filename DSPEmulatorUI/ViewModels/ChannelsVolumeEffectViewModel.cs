@@ -11,10 +11,11 @@ using System.Text;
 namespace DSPEmulatorUI.ViewModels
 {
     [JsonObject(MemberSerialization.OptIn)]
-    class ChannelsVolumeEffectViewModel : Screen, IEffectProvider
+    class ChannelsVolumeEffectViewModel : Screen, IEffect
     {
         [JsonProperty()]
-        public string EffectType { get; set; } = typeof(ChannelsVolumeEffectViewModel).Name;
+        public string EffectType => typeof(ChannelsVolumeEffectViewModel).Name;
+        public string EffectDisplayName => "Channels Volume";
         private ChannelsVolumeSampleProvider volumeSampleProvider;
         private float leftGain;
         private float rightGain;
@@ -38,6 +39,7 @@ namespace DSPEmulatorUI.ViewModels
                     volumeSampleProvider.RightChannelVolumeInDB = RightGain;
                 }
             } }
+
         public ChannelsVolumeEffectViewModel() { }
         public ChannelsVolumeEffectViewModel(JToken jToken)
         {

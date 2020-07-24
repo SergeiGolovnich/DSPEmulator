@@ -11,10 +11,11 @@ using System.Text;
 namespace DSPEmulatorUI.ViewModels
 {
     [JsonObject(MemberSerialization.OptIn)]
-    class SignalQualityReducerEffectViewModel : Screen, IEffectProvider
+    class SignalQualityReducerEffectViewModel : Screen, IEffect
     {
         [JsonProperty()]
         public string EffectType { get; set; } = typeof(SignalQualityReducerEffectViewModel).Name;
+        public string EffectDisplayName => "Signal Quality Reducer";
         private SignalQualityReducerSampleProvider signalQualityReducerSampleProvider;
         private int bitDepth = 16;
         private int sampleRate = 44100;

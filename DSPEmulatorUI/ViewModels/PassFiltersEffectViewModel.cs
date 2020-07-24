@@ -14,10 +14,11 @@ using DSPEmulatorLibrary.SampleProviders.Utils;
 namespace DSPEmulatorUI.ViewModels
 {
     [JsonObject(MemberSerialization.OptIn)]
-    class PassFiltersEffectViewModel : Screen, IEffectProvider
+    class PassFiltersEffectViewModel : Screen, IEffect
     {
         [JsonProperty()]
         public string EffectType { get; set; } = typeof(PassFiltersEffectViewModel).Name;
+        public string EffectDisplayName => "Pass Filters";
         private PassFiltersSampleProvider passFiltersSampleProvider;
         private int hpFreq = 40;
         private int lpFreq = 15000;

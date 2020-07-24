@@ -13,10 +13,11 @@ using System.Windows.Input;
 namespace DSPEmulatorUI.ViewModels
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class DelayEffectViewModel : Screen, IEffectProvider
+    public class DelayEffectViewModel : Screen, IEffect
     {
         [JsonProperty()]
-        public string EffectType { get; set; } = typeof(DelayEffectViewModel).Name;
+        public string EffectType => typeof(DelayEffectViewModel).Name;
+        public string EffectDisplayName => "Channels Delay";
         private ChannelsDelaySampleProvider delaySampleProvider;
         private double leftDelay;
         private double rightDelay;
@@ -44,7 +45,6 @@ namespace DSPEmulatorUI.ViewModels
                     delaySampleProvider.RightDelayMillisec = rightDelay;
                 }
             } }
-        
 
         public DelayEffectViewModel()
         {

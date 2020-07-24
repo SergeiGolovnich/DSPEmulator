@@ -8,10 +8,11 @@ using Newtonsoft.Json.Linq;
 namespace DSPEmulatorUI.ViewModels
 {
     [JsonObject(MemberSerialization.OptIn)]
-    class PhaseSwitchEffectViewModel : Screen, IEffectProvider
+    class PhaseSwitchEffectViewModel : Screen, IEffect
     {
         [JsonProperty()]
         public string EffectType { get; set; } = typeof(PhaseSwitchEffectViewModel).Name;
+        public string EffectDisplayName => "Phase Switch";
         private PhaseSwitchSampleProvider phaseSwitchSampleProvider;
         private bool leftPhaseSwitched;
         private bool rightPhaseSwitched;

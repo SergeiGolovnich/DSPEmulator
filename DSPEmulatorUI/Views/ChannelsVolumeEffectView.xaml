@@ -15,8 +15,8 @@
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.ColumnSpan="2" FontWeight="Bold">Channels Volume</TextBlock>
-        
+        <TextBlock Grid.ColumnSpan="2" FontWeight="Bold" x:Name="EffectDisplayName"/>
+
         <StackPanel Orientation="Vertical" Grid.Row="1">
             <TextBlock Text="L" HorizontalAlignment="Center"/>
             <Slider x:Name="LeftGain" Maximum="0" Minimum="-18" Orientation="Vertical" TickPlacement="TopLeft" Height="150" HorizontalAlignment="Center">

@@ -16,8 +16,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.ColumnSpan="2" FontWeight="Bold">Signal Quality Reducer</TextBlock>
-        
+        <TextBlock Grid.ColumnSpan="2" FontWeight="Bold" x:Name="EffectDisplayName"/>
+
         <TextBlock Grid.Row="1" Text="Bit Depth: " HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <StackPanel Margin="2" Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
             <Slider x:Name="BitDepth" Maximum="16" Minimum="1" Orientation="Horizontal" Width="150" HorizontalAlignment="Center" SmallChange="1" TickPlacement="Both" IsDirectionReversed="True"/>

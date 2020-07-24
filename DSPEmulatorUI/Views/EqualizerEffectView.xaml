@@ -16,7 +16,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical" Grid.ColumnSpan="2">
-            <TextBlock FontWeight="Bold">Equalizer</TextBlock>
+            <TextBlock FontWeight="Bold" x:Name="EffectDisplayName"/>
         </StackPanel>
 
         <TabControl  Grid.Row="1" Grid.ColumnSpan="2" x:Name="Items">

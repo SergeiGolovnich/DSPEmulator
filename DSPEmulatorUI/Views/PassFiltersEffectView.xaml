@@ -17,7 +17,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock FontWeight="Bold">Pass Filters</TextBlock>
+        <TextBlock FontWeight="Bold" x:Name="EffectDisplayName"/>
         <Border  Margin="0,0,5,0" Grid.Row="1" BorderThickness="1" BorderBrush="#FFC1C1C1">
             <Grid>
                 <Grid.ColumnDefinitions>
