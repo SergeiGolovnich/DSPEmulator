@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using DSPEmulatorLibrary;
+using DSPEmulatorLibrary.SampleProviders;
 using NAudio.Wave;
 using System.Windows;
 using Newtonsoft.Json;
@@ -22,6 +23,7 @@ namespace DSPEmulatorUI.ViewModels
         public bool IsPlaying { get; set; } = false;
         private readonly IWavePlayer wavePlayer = new WaveOutEvent();
         private AudioFileReader audioFile;
+        private SampleProviderWrapper sampleProviderWrapper;
 
         private static BackgroundWorker backgroundWorker;
 
@@ -73,6 +75,20 @@ namespace DSPEmulatorUI.ViewModels
         {
             ((FilesViewModel)FilesView).StartProcessEvent += MainWindowViewModel_StartProcessEvent;
             ((FilesViewModel)FilesView).PreviewPlayEvent += MainWindowViewModel_PreviewPlayEvent;
+
+            ((DSPViewModel)DSPView).PropertyChanged += MainWindowViewModel_PropertyChanged;
+        }
+
+        private void MainWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (IsPlaying)
+            {
+                ISampleProvider audio = audioFile;
+
+                audio = ((IEffectProvider)DSPView).SampleProvider(audio);
+
+                sampleProviderWrapper.SourceProvider = audio;
+            }
         }
 
         private void MainWindowViewModel_PreviewPlayEvent(object sender, EventArgs e)
@@ -118,7 +134,9 @@ namespace DSPEmulatorUI.ViewModels
 
                 audio = ((IEffectProvider)DSPView).SampleProvider(audio);
 
-                wavePlayer.Init(audio);
+                sampleProviderWrapper = new SampleProviderWrapper(audio);
+
+                wavePlayer.Init(sampleProviderWrapper);
                 wavePlayer.Play();
 
                 IsPlaying = true;

@@ -87,6 +87,8 @@ namespace DSPEmulatorUI.ViewModels
             if (e.Key == Key.Delete && item != null)
             {
                 Items.Remove(item);
+
+                NotifyOfPropertyChange(() => Items);
             }
         }
         public void AddEffect(string name)
@@ -101,6 +103,8 @@ namespace DSPEmulatorUI.ViewModels
             if (effect != null)
             {
                 Items.Add(effect);
+
+                NotifyOfPropertyChange(() => Items);
             }
 
             SelectedAddEffectIndex = 0;
@@ -118,6 +122,8 @@ namespace DSPEmulatorUI.ViewModels
                 Items.Insert(currentEffectIndex - 1, currentEffect);
 
                 SelectedEffect = currentEffect;
+
+                NotifyOfPropertyChange(() => Items);
             }
         }
         public bool CanMoveEffectUp
@@ -148,6 +154,8 @@ namespace DSPEmulatorUI.ViewModels
                 Items.Insert(currentEffectIndex + 1, currentEffect);
 
                 SelectedEffect = currentEffect;
+
+                NotifyOfPropertyChange(() => Items);
             }
         }
         public bool CanMoveEffectDown

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DSPEmulatorLibrary.SampleProviders
 {
-    class SampleProviderWrapper : ISampleProvider
+    public class SampleProviderWrapper : ISampleProvider
     {
         public ISampleProvider SourceProvider { get; set; }
         public WaveFormat WaveFormat => SourceProvider.WaveFormat;
