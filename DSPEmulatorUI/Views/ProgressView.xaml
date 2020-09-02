@@ -17,5 +17,6 @@
         <TextBlock Text="Processing..." HorizontalAlignment="Left" Margin="10" VerticalAlignment="Center" FontSize="20"/>
         <ProgressBar x:Name="ProgressBar" Grid.Row="1" Minimum="0" Maximum="100" Margin="20 10" MinWidth="25"/>
         <Button x:Name="CancelBtn" Content="Cancel" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10" Padding="30 5" Click="CancelBtn_Click" />
+        <Label x:Name="labelLastCompletedFile" Content="" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
     </Grid>
 </Window>

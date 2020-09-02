@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using DSPEmulatorUI.Views;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DSPEmulatorUI.ViewModels
 {
@@ -47,14 +48,14 @@ namespace DSPEmulatorUI.ViewModels
             {
                 var currFileInd = ((FilesViewModel)FilesView).Files.IndexOf(audioFile.FileName);
 
-                if(currFileInd < 0 && ((FilesViewModel)FilesView).SelectedFile == null)
+                if (currFileInd < 0 && ((FilesViewModel)FilesView).SelectedFile == null)
                 {
                     StopPreview();
 
                     return;
                 }
 
-                if(((FilesViewModel)FilesView).Files.Count <= (currFileInd + 1))
+                if (((FilesViewModel)FilesView).Files.Count <= (currFileInd + 1))
                 {
                     StopPreview();
 
@@ -162,12 +163,13 @@ namespace DSPEmulatorUI.ViewModels
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            int index = 1;
+            int processedFilesCount = 1;
+            int allFilesCount = ((FilesViewModel)FilesView).Files.Count;
+
             foreach (string file in ((FilesViewModel)FilesView).Files)
             {
-                if (backgroundWorker.CancellationPending)
+                if ((sender as BackgroundWorker).CancellationPending)
                 {
-                    e.Cancel = true;
                     return;
                 }
 
@@ -177,7 +179,7 @@ namespace DSPEmulatorUI.ViewModels
                 }
                 catch { }
 
-                backgroundWorker.ReportProgress(index++ * 100 / ((FilesViewModel)FilesView).Files.Count);
+                (sender as BackgroundWorker).ReportProgress(processedFilesCount++ * 100 / allFilesCount, Path.GetFileName(file));
             }
         }
 
@@ -204,11 +206,12 @@ namespace DSPEmulatorUI.ViewModels
 
                     string output = JsonConvert.SerializeObject(session);
                     File.WriteAllText(dialog.FileName, output);
-                }catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     MessageBox.Show($"Error On Saving Session: {ex.Message}", "Error");
                 }
-                
+
             }
         }
 
@@ -242,7 +245,7 @@ namespace DSPEmulatorUI.ViewModels
                     newFilesView.Deserialize(jObject["FilesView"]);
                     newDSPView.Deserialize(jObject["DSPView"]);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show($"Error On Loading Session: {ex.Message}", "Error");
                     return;

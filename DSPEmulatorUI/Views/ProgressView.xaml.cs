@@ -45,6 +45,8 @@ namespace DSPEmulatorUI.Views
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             ProgressBar.Value = e.ProgressPercentage;
+
+            labelLastCompletedFile.Content = e.UserState;
         }
 
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
