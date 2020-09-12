@@ -72,8 +72,8 @@ namespace DSPEmulatorUI.ViewModels
             // Create a "Save As" dialog for selecting a directory (HACK)
             var dialog = new Microsoft.Win32.SaveFileDialog
             {
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), // Use current value for initial dir
-                Title = "Select a Directory", // instead of default "Save As"
+                InitialDirectory = OutputFolder, // Use current value for initial dir
+                Title = "Select Output Directory", // instead of default "Save As"
                 Filter = "Directory|*.this.directory", // Prevents displaying files
                 FileName = "select" // Filename will then be "select.this.directory"
             };
