@@ -34,7 +34,19 @@ namespace DSPEmulatorLibrary
 
         private static void saveToMp3(string fileName, ISampleProvider audioToSave)
         {
-            MediaFoundationEncoder.EncodeToMp3(audioToSave.ToWaveProvider(), fileName, 320000);
+            var resampled = resampleTo44100(audioToSave);
+
+            MediaFoundationEncoder.EncodeToMp3(resampled, fileName, 320000);
+        }
+
+        private static IWaveProvider resampleTo44100(ISampleProvider audioFile)
+        {
+            if (audioFile.WaveFormat.SampleRate != 44100)
+            {
+                return new MediaFoundationResampler(audioFile.ToWaveProvider(), 44100);
+            }
+
+            return audioFile.ToWaveProvider();
         }
     }
 }
