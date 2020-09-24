@@ -15,6 +15,8 @@ namespace DSPEmulatorUI.ViewModels
 
         public string EffectDisplayName => "Tube Saturation";
 
+        private TubeSaturationSampleProvider sampleProvider;
+
         public TubeSaturationEffectViewModel() { }
         public TubeSaturationEffectViewModel(JToken jToken)
         {
@@ -23,7 +25,7 @@ namespace DSPEmulatorUI.ViewModels
 
         public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
         {
-            throw new System.NotImplementedException();
+            return sampleProvider = new TubeSaturationSampleProvider(sourceProvider);
         }
     }
 }
