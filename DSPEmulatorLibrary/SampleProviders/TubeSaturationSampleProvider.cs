@@ -9,7 +9,6 @@ namespace DSPEmulatorLibrary.SampleProviders
     public class TubeSaturationSampleProvider : ISampleProvider
     {
         private readonly ISampleProvider source;
-        private readonly int channels;
         private readonly ITubeSaturator saturator = new StaticWaveshaping();
         private float wetCoeff;
         public WaveFormat WaveFormat => source.WaveFormat;
@@ -30,7 +29,6 @@ namespace DSPEmulatorLibrary.SampleProviders
 
             this.source = source;
             WetPercent = wetPercent;
-            channels = source.WaveFormat.Channels;
         }
 
         public int Read(float[] buffer, int offset, int sampleCount)
@@ -40,7 +38,7 @@ namespace DSPEmulatorLibrary.SampleProviders
             float dryCoeff = 1.0f - wetCoeff;
             float drySample, wetSample;
 
-            for (int n = 0; n < sampleCount; n++)
+            for (int n = 0; n < samplesRead; n++)
             {
                 drySample = dryCoeff * buffer[offset + n];
                 wetSample = wetCoeff * buffer[offset + n];
