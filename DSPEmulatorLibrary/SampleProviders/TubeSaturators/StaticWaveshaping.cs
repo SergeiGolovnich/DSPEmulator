@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DSPEmulatorLibrary.SampleProviders.TubeSaturators
 {
-    public class StaticWaveshapingType1 : ITubeSaturator
+    public class StaticWaveshaping : ITubeSaturator
     {
         public float Saturate(float sample)
         {

@@ -10,14 +10,26 @@ namespace DSPEmulatorLibrary.SampleProviders
     {
         private readonly ISampleProvider source;
         private readonly int channels;
-        private ITubeSaturator saturator = new StaticWaveshapingType1();
+        private readonly ITubeSaturator saturator = new StaticWaveshaping();
+        private float wetCoeff;
         public WaveFormat WaveFormat => source.WaveFormat;
 
-        public TubeSaturationSampleProvider(ISampleProvider source)
+        public float WetPercent { get
+            {
+                return wetCoeff * 100.0f;
+            }
+            set
+            {
+                wetCoeff = value / 100.0f;
+            }
+        }
+
+        public TubeSaturationSampleProvider(ISampleProvider source, float wetPercent)
         {
             if (source.WaveFormat.Channels != 2) throw new InvalidOperationException("Not a stereo audio file.");
 
             this.source = source;
+            WetPercent = wetPercent;
             channels = source.WaveFormat.Channels;
         }
 
@@ -25,18 +37,17 @@ namespace DSPEmulatorLibrary.SampleProviders
         {
             int samplesRead = source.Read(buffer, offset, sampleCount);
 
+            float dryCoeff = 1.0f - wetCoeff;
+            float drySample, wetSample;
+
             for (int n = 0; n < sampleCount; n++)
             {
-                int ch = n % channels;
+                drySample = dryCoeff * buffer[offset + n];
+                wetSample = wetCoeff * buffer[offset + n];
 
-                if (ch == 0)
-                {
-                    buffer[offset + n] = saturator.Saturate(buffer[offset + n]);
-                }
-                else
-                {
-                    buffer[offset + n] = saturator.Saturate(buffer[offset + n]);
-                }
+                wetSample = saturator.Saturate(wetSample);
+
+                buffer[offset + n] = drySample + wetSample;
             }
 
             return samplesRead;
