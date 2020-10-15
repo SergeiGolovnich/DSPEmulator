@@ -37,7 +37,7 @@
                 <TextBox Margin="2" Grid.Row="1" Grid.Column="1" MinWidth="50" x:Name="HpFreq" cal:Message.Attach="[Event KeyUp] = [Action HpFreqChanged($eventArgs)]"/>
 
                 <TextBlock Grid.Row="2" >Q:</TextBlock>
-                <Label Grid.Row="2" Grid.Column="1" MinWidth="50" Content="24 dB/oct" />
+                <Label Grid.Row="2" Grid.Column="1" MinWidth="50" Content="12 dB/oct" />
             </Grid>
         </Border>
 
@@ -60,7 +60,7 @@
                 <TextBox Margin="2" Grid.Row="1" Grid.Column="1" MinWidth="50" x:Name="LpFreq" cal:Message.Attach="[Event KeyUp] = [Action LpFreqChanged($eventArgs)]"/>
 
                 <TextBlock Grid.Row="2" >Q:</TextBlock>
-                <Label Grid.Row="2" Grid.Column="1" MinWidth="50" Content="24 dB/oct" />
+                <Label Grid.Row="2" Grid.Column="1" MinWidth="50" Content="12 dB/oct" />
             </Grid>
         </Border>
         

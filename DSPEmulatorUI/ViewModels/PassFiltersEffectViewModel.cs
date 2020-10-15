@@ -22,8 +22,8 @@ namespace DSPEmulatorUI.ViewModels
         private PassFiltersSampleProvider passFiltersSampleProvider;
         private int hpFreq = 40;
         private int lpFreq = 15000;
-        private float hpQ = 0.75f;//gives the smoothest drop in amplitude
-        private float lpQ = 0.75f;//gives the smoothest drop in amplitude
+        private float hpQ = (float)(1.0 / Math.Sqrt(2));//gives the smoothest drop in amplitude
+        private float lpQ = (float)(1.0 / Math.Sqrt(2));//gives the smoothest drop in amplitude
         private bool isHpEnabled = true;
         private bool isLpEnabled = true;
         private int freqChangeStep = 1;
