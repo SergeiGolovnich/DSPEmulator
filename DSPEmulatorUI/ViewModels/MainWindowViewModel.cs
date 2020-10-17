@@ -23,7 +23,7 @@ namespace DSPEmulatorUI.ViewModels
 
         public bool IsPlaying { get; set; } = false;
         private readonly IWavePlayer wavePlayer = new WaveOutEvent();
-        private AudioFileReader audioFile;
+        private AudioFileReader audioFileReader;
         private SampleProviderWrapper sampleProviderWrapper;
 
         private static BackgroundWorker backgroundWorker;
@@ -46,7 +46,7 @@ namespace DSPEmulatorUI.ViewModels
 
             try
             {
-                var currFileInd = ((FilesViewModel)FilesView).Files.IndexOf(audioFile.FileName);
+                var currFileInd = ((FilesViewModel)FilesView).IndexOfFilePath(audioFileReader.FileName);
 
                 if (currFileInd < 0 && ((FilesViewModel)FilesView).SelectedFile == null)
                 {
@@ -84,7 +84,7 @@ namespace DSPEmulatorUI.ViewModels
         {
             if (IsPlaying)
             {
-                ISampleProvider audio = audioFile;
+                ISampleProvider audio = audioFileReader;
 
                 audio = ((IEffectProvider)DSPView).SampleProvider(audio);
 
@@ -94,7 +94,7 @@ namespace DSPEmulatorUI.ViewModels
 
         private void MainWindowViewModel_PreviewPlayEvent(object sender, EventArgs e)
         {
-            if (audioFile == null)
+            if (audioFileReader == null)
             {
                 PlayPreview();
                 return;
@@ -114,7 +114,7 @@ namespace DSPEmulatorUI.ViewModels
             bool isAudioPlayingAndSelectedAtSameTime()
             {
                 return (IsPlaying || wavePlayer.PlaybackState == PlaybackState.Playing)
-                                && (audioFile.FileName == ((FilesViewModel)FilesView).SelectedFile);
+                                && (audioFileReader.FileName == ((FilesViewModel)FilesView).SelectedFile.FullPath);
             }
         }
 
@@ -129,9 +129,9 @@ namespace DSPEmulatorUI.ViewModels
         {
             try
             {
-                audioFile = new AudioFileReader(((FilesViewModel)FilesView).SelectedFile);
+                audioFileReader = new AudioFileReader(((FilesViewModel)FilesView).SelectedFile.FullPath);
 
-                ISampleProvider audio = audioFile;
+                ISampleProvider audio = audioFileReader;
 
                 audio = ((IEffectProvider)DSPView).SampleProvider(audio);
 
@@ -166,7 +166,7 @@ namespace DSPEmulatorUI.ViewModels
             int processedFilesCount = 1;
             int allFilesCount = ((FilesViewModel)FilesView).Files.Count;
 
-            foreach (string file in ((FilesViewModel)FilesView).Files)
+            foreach (var file in ((FilesViewModel)FilesView).Files)
             {
                 if ((sender as BackgroundWorker).CancellationPending)
                 {
@@ -175,11 +175,21 @@ namespace DSPEmulatorUI.ViewModels
 
                 try
                 {
-                    DSPEmulator.ProcessFile(file, (DSPViewModel)DSPView, ((FilesViewModel)FilesView).OutputFolder);
+                    var newPath = Path.Combine(((FilesViewModel)FilesView).OutputFolder,
+                        file.RelativePath);
+
+                    var outputDir = Path.GetDirectoryName(newPath);
+
+                    if (!Directory.Exists(outputDir))
+                    {
+                        Directory.CreateDirectory(outputDir);
+                    }
+
+                    DSPEmulator.ProcessFile(file.FullPath, (DSPViewModel)DSPView, outputDir);
                 }
                 catch { }
 
-                (sender as BackgroundWorker).ReportProgress(processedFilesCount++ * 100 / allFilesCount, Path.GetFileName(file));
+                (sender as BackgroundWorker).ReportProgress(processedFilesCount++ * 100 / allFilesCount, Path.GetFileName(file.FullPath));
             }
         }
 

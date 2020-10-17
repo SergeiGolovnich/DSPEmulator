@@ -15,12 +15,12 @@ namespace DSPEmulatorUI.ViewModels
     [JsonObject(MemberSerialization.OptIn)]
     public class FilesViewModel : Screen
     {
-        private string _selectedFile;
+        private AudioFileInfo _selectedFile;
 
         public string ImagePath { get; } = "/Views/Icons/files_icon.png";
         [JsonProperty]
-        public BindableCollection<string> Files { get; set; } = new BindableCollection<string>();
-        public string SelectedFile { get => _selectedFile; 
+        public BindableCollection<AudioFileInfo> Files { get; set; } = new BindableCollection<AudioFileInfo>();
+        public AudioFileInfo SelectedFile { get => _selectedFile; 
             set 
             {
                 _selectedFile = value;
@@ -50,21 +50,20 @@ namespace DSPEmulatorUI.ViewModels
             };
 
             var result = dialog.ShowDialog();
+
             if (result == true && dialog.FileNames.Length > 0)
             {
                 foreach (string filePath in dialog.FileNames)
                 {
-                    AddFile(filePath);
+                    var files = AudioFileFinder.GetAllAudioFilesRecursively(filePath);
+                    AddFiles(files);
                 }
             }
         }
 
-        private void AddFile(string filePath)
+        private void AddFiles(List<AudioFileInfo> files)
         {
-            if (!Files.Contains(filePath))
-            {
-                Files.Add(filePath);
-            }
+            Files.AddRange(files);
         }
 
         public void SetOutputFolder()
@@ -99,10 +98,11 @@ namespace DSPEmulatorUI.ViewModels
         {
             if (e.Key == Key.Delete && items != null)
             {
-                List<string> items_copy = new List<string>();
+                var items_copy = new List<AudioFileInfo>();
+
                 foreach (var item in items)
                 {
-                    items_copy.Add((string)item);
+                    items_copy.Add((AudioFileInfo)item);
                 }
 
                 Files.RemoveRange(items_copy);
@@ -123,7 +123,7 @@ namespace DSPEmulatorUI.ViewModels
             {
                 var output = false;
 
-                if (!string.IsNullOrEmpty(SelectedFile))
+                if (SelectedFile != null)
                 {
                     output = true;
                 }
@@ -143,7 +143,8 @@ namespace DSPEmulatorUI.ViewModels
 
             foreach(JToken file in files)
             {
-                Files.Add(file.Value<string>());
+                AudioFileInfo fileInfo = file.ToObject<AudioFileInfo>();
+                Files.Add(fileInfo);
             }
         }
 
@@ -155,7 +156,9 @@ namespace DSPEmulatorUI.ViewModels
 
                 foreach(string file in dropData)
                 {
-                    AddFile(file);
+                    var files = AudioFileFinder.GetAllAudioFilesRecursively(file);
+
+                    AddFiles(files);
                 }
             }
         }
@@ -165,6 +168,19 @@ namespace DSPEmulatorUI.ViewModels
             {
                 PreviewBtn();
             }
+        }
+
+        public int IndexOfFilePath(string filePath)
+        {
+            for(int i = 0; i < Files.Count; i++)
+            {
+                if(filePath == Files[i].FullPath)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 }
