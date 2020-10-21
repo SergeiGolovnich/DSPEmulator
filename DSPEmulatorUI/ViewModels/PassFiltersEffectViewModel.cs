@@ -110,8 +110,13 @@ namespace DSPEmulatorUI.ViewModels
         public PassFiltersEffectViewModel() { }
         public PassFiltersEffectViewModel(JToken jToken)
         {
-            //LeftDelay = jToken[nameof(LeftDelay)].Value<double>();
-            //RightDelay = jToken[nameof(RightDelay)].Value<double>();
+            IsHpEnabled = jToken[nameof(IsHpEnabled)].Value<bool>();
+            HpFreq = jToken[nameof(HpFreq)].Value<int>();
+            HpQ = jToken[nameof(HpQ)].Value<float>();
+
+            IsLpEnabled = jToken[nameof(IsLpEnabled)].Value<bool>();
+            LpFreq = jToken[nameof(LpFreq)].Value<int>();
+            LpQ = jToken[nameof(LpQ)].Value<float>();
         }
 
         public ISampleProvider SampleProvider(ISampleProvider sourceProvider)
