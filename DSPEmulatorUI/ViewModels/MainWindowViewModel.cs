@@ -21,10 +21,7 @@ namespace DSPEmulatorUI.ViewModels
         public object FilesView { get => Items[0]; set { Items[0] = value; } }
         public object DSPView { get => Items[1]; set { Items[1] = value; } }
 
-        public bool IsPlaying { get; set; } = false;
-        private readonly IWavePlayer wavePlayer = new WaveOutEvent();
-        private AudioFileReader audioFileReader;
-        private SampleProviderWrapper sampleProviderWrapper;
+        private AudioPlayer audioPlayer = new AudioPlayer();
 
         private static BackgroundWorker backgroundWorker;
 
@@ -33,42 +30,37 @@ namespace DSPEmulatorUI.ViewModels
             Items.Add(new FilesViewModel());
             Items.Add(new DSPViewModel());
             subscribeToEvents();
-
-            wavePlayer.PlaybackStopped += WavePlayer_PlaybackStopped;
         }
 
-        private void WavePlayer_PlaybackStopped(object sender, StoppedEventArgs e)
+        private void WavePlayer_PlaybackStopped(object sender, EventArgs e)
         {
-            if (!IsPlaying || wavePlayer.PlaybackState == PlaybackState.Playing)
-            {
-                return;
-            }
-
             try
             {
-                var currFileInd = ((FilesViewModel)FilesView).IndexOfFilePath(audioFileReader.FileName);
+                var currFileInd = ((FilesViewModel)FilesView).IndexOfFilePath(audioPlayer.FilePath);
 
                 if (currFileInd < 0 && ((FilesViewModel)FilesView).SelectedFile == null)
                 {
-                    StopPreview();
+                    audioPlayer.Stop();
 
                     return;
                 }
 
                 if (((FilesViewModel)FilesView).Files.Count <= (currFileInd + 1))
                 {
-                    StopPreview();
+                    audioPlayer.Stop();
 
                     return;
                 }
 
                 ((FilesViewModel)FilesView).SelectedFile = ((FilesViewModel)FilesView).Files[currFileInd + 1];
 
-                PlayPreview();
+                audioPlayer.FilePath = ((FilesViewModel)FilesView).SelectedFile.FullPath;
+                audioPlayer.Effects = (IEffectProvider)DSPView;
+                audioPlayer.Play();
             }
             catch
             {
-                StopPreview();
+                audioPlayer.Stop();
             }
         }
 
@@ -78,73 +70,43 @@ namespace DSPEmulatorUI.ViewModels
             ((FilesViewModel)FilesView).PreviewPlayEvent += MainWindowViewModel_PreviewPlayEvent;
 
             ((DSPViewModel)DSPView).PropertyChanged += MainWindowViewModel_PropertyChanged;
+
+            //audioPlayer.PlaybackStopped += WavePlayer_PlaybackStopped;
+            ((FilesViewModel)FilesView).PlayerViewModel = new PlayerViewModel(audioPlayer);
         }
 
         private void MainWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (IsPlaying)
-            {
-                ISampleProvider audio = audioFileReader;
-
-                audio = ((IEffectProvider)DSPView).SampleProvider(audio);
-
-                sampleProviderWrapper.SourceProvider = audio;
-            }
+            audioPlayer.Effects = (IEffectProvider)DSPView;
         }
 
         private void MainWindowViewModel_PreviewPlayEvent(object sender, EventArgs e)
         {
-            if (audioFileReader == null)
+            if (!audioPlayer.IsPlaying)
             {
-                PlayPreview();
+                audioPlayer.FilePath = ((FilesViewModel)FilesView).SelectedFile.FullPath;
+                audioPlayer.Effects = (IEffectProvider)DSPView;
+                audioPlayer.Play();
                 return;
             }
 
             if (isAudioPlayingAndSelectedAtSameTime())
             {
-                StopPreview();
+                audioPlayer.Stop();
             }
             else
             {
-                StopPreview();
+                audioPlayer.Stop();
 
-                PlayPreview();
+                audioPlayer.FilePath = ((FilesViewModel)FilesView).SelectedFile.FullPath;
+                audioPlayer.Effects = (IEffectProvider)DSPView;
+                audioPlayer.Play();
             }
 
             bool isAudioPlayingAndSelectedAtSameTime()
             {
-                return (IsPlaying || wavePlayer.PlaybackState == PlaybackState.Playing)
-                                && (audioFileReader.FileName == ((FilesViewModel)FilesView).SelectedFile.FullPath);
-            }
-        }
-
-        private void StopPreview()
-        {
-            IsPlaying = false;
-
-            wavePlayer.Stop();
-        }
-
-        private void PlayPreview()
-        {
-            try
-            {
-                audioFileReader = new AudioFileReader(((FilesViewModel)FilesView).SelectedFile.FullPath);
-
-                ISampleProvider audio = audioFileReader;
-
-                audio = ((IEffectProvider)DSPView).SampleProvider(audio);
-
-                sampleProviderWrapper = new SampleProviderWrapper(audio);
-
-                wavePlayer.Init(sampleProviderWrapper);
-                wavePlayer.Play();
-
-                IsPlaying = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error On Playing Preview: {ex.Message}", "Error");
+                return audioPlayer.IsPlaying
+                       && audioPlayer.FilePath == ((FilesViewModel)FilesView).SelectedFile.FullPath;
             }
         }
 
@@ -238,9 +200,9 @@ namespace DSPEmulatorUI.ViewModels
 
             if (dialog.ShowDialog() == true)
             {
-                if (IsPlaying)
+                if (audioPlayer.IsPlaying)
                 {
-                    MainWindowViewModel_PreviewPlayEvent(null, null);
+                    audioPlayer.Stop();
                 }
 
                 string input = File.ReadAllText(dialog.FileName);

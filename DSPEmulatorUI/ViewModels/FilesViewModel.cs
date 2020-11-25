@@ -16,6 +16,7 @@ namespace DSPEmulatorUI.ViewModels
     public class FilesViewModel : Screen
     {
         private AudioFileInfo _selectedFile;
+        public PlayerViewModel PlayerViewModel { get; set; }
 
         public string ImagePath { get; } = "/Views/Icons/files_icon.png";
         [JsonProperty]

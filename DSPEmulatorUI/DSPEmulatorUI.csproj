@@ -18,6 +18,11 @@
     <None Remove="Views\down-arrow.png" />
     <None Remove="Views\dsp_icon.png" />
     <None Remove="Views\files_icon.png" />
+    <None Remove="Views\Icons\next-button.png" />
+    <None Remove="Views\Icons\pause-button.png" />
+    <None Remove="Views\Icons\play-button.png" />
+    <None Remove="Views\Icons\previous-button.png" />
+    <None Remove="Views\Icons\stop-button.png" />
     <None Remove="Views\plus.png" />
     <None Remove="Views\plus2.png" />
     <None Remove="Views\up-arrow.png" />
@@ -37,8 +42,13 @@
     <Resource Include="Views\Icons\cross.png" />
     <Resource Include="Views\Icons\dsp_icon.png" />
     <Resource Include="Views\Icons\files_icon.png" />
+    <Resource Include="Views\Icons\next-button.png" />
+    <Resource Include="Views\Icons\pause-button.png" />
+    <Resource Include="Views\Icons\play-button.png" />
     <Resource Include="Views\Icons\plus.png" />
     <Resource Include="Views\Icons\plus2.png" />
+    <Resource Include="Views\Icons\previous-button.png" />
+    <Resource Include="Views\Icons\stop-button.png" />
     <Resource Include="Views\Icons\up-arrow.png" />
   </ItemGroup>
 

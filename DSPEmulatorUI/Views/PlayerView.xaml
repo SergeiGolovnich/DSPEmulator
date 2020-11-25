@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="DSPEmulatorUI.Views.PlayerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DSPEmulatorUI.Views"
+             mc:Ignorable="d" 
+>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding Title, Mode=OneWay}" VerticalAlignment="Top" HorizontalAlignment="Center" />
+        <Slider Value="{Binding PositionPercent, Mode=OneWay}" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Maximum="100" TickPlacement="None" ValueChanged="Slider_ValueChanged" GotMouseCapture="Slider_GotMouseCapture" LostMouseCapture="Slider_LostMouseCapture" />
+        <StackPanel Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button Height="25" Width="25" BorderThickness="0" Background="Transparent" x:Name="PlayPauseButton" Click="PlayPauseButton_Click">
+                <Image x:Name="PlayPauseImage" Source="/Views/Icons/play-button.png"/>
+            </Button>
+            <Separator Margin="3,2,5,2"/>
+            <!--<Button Height="30" Width="30" BorderThickness="0" Background="Transparent" x:Name="PreviousButton" Margin="3">
+                <Image Source="/Views/Icons/previous-button.png"/>
+            </Button>-->
+            <Button Height="25" Width="25" BorderThickness="0" Background="Transparent" x:Name="StopButton" Click="StopButton_Click">
+                <Image Source="/Views/Icons/stop-button.png"/>
+            </Button>
+            <!--<Button Height="30" Width="30" BorderThickness="0" Background="Transparent" x:Name="NextButton" Margin="3">
+                <Image Source="/Views/Icons/next-button.png"/>
+            </Button>-->
+        </StackPanel>
+    </Grid>
+</UserControl>
