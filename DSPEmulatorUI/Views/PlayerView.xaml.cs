@@ -63,6 +63,26 @@ namespace DSPEmulatorUI.Views
             isUserInput = true;
         }
 
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            (DataContext as PlayerViewModel)?.NextButton();
+        }
+
+        private void PreviousButton_Click(object sender, RoutedEventArgs e)
+        {
+            (DataContext as PlayerViewModel)?.PreviousButton();
+        }
+
+        private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            (e.NewValue as PlayerViewModel).AudioPlayer.AudioFileChanged += AudioPlayer_AudioFileChanged;
+        }
+
+        private void AudioPlayer_AudioFileChanged(object sender, string e)
+        {
+            PlayPauseImage.Source = pauseImage;
+        }
+
         private void Slider_LostMouseCapture(object sender, MouseEventArgs e)
         {
             isUserInput = false;

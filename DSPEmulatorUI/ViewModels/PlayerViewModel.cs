@@ -12,6 +12,9 @@ namespace DSPEmulatorUI.ViewModels
         private double positionPercent;
         private string title;
 
+        public event EventHandler<string> NextAudioFileEvent;
+        public event EventHandler<string> PreviousAudioFileEvent;
+
         public string Title { get => title; 
             set
             { 
@@ -70,7 +73,7 @@ namespace DSPEmulatorUI.ViewModels
 
         public void PreviousButton()
         {
-
+            PreviousAudioFileEvent?.Invoke(this, audioPlayer.FilePath);
         }
         public void StopButton()
         {
@@ -80,7 +83,7 @@ namespace DSPEmulatorUI.ViewModels
         }
         public void NextButton()
         {
-
+            NextAudioFileEvent?.Invoke(this, audioPlayer.FilePath);
         }
     }
 }

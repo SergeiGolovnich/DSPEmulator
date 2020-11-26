@@ -12,7 +12,8 @@ namespace DSPEmulatorUI
     public class AudioPlayer
     {
         private Timer timer = new Timer(500);
-        public bool IsPlaying { get; private set; } = false;
+        public bool IsPlaying { get => wavePlayer.PlaybackState == PlaybackState.Playing; }
+        public bool IsPaused { get => wavePlayer.PlaybackState == PlaybackState.Paused; }
         private readonly IWavePlayer wavePlayer = new WaveOutEvent();
         private AudioFileReader audioFileReader;
         private SampleProviderWrapper sampleProviderWrapper = new SampleProviderWrapper(null);
@@ -74,9 +75,6 @@ namespace DSPEmulatorUI
 
         private void WavePlayer_PlaybackStopped(object sender, StoppedEventArgs e)
         {
-            IsPlaying = false;
-            timer.Enabled = false;
-
             PlaybackStopped?.Invoke(this, EventArgs.Empty);
         }
 
@@ -103,7 +101,6 @@ namespace DSPEmulatorUI
                 
                 wavePlayer.Play();
 
-                IsPlaying = true;
                 timer.Enabled = true;
             }
             catch (Exception ex)
@@ -115,7 +112,6 @@ namespace DSPEmulatorUI
         {
             wavePlayer.Pause();
 
-            IsPlaying = false;
             timer.Enabled = false;
         }
         public void Stop()
@@ -125,7 +121,6 @@ namespace DSPEmulatorUI
             if(audioFileReader != null)
                 audioFileReader.Position = 0;
 
-            IsPlaying = false;
             timer.Enabled = false;
         }
     }

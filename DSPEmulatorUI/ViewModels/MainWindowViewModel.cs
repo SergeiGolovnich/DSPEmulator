@@ -32,38 +32,6 @@ namespace DSPEmulatorUI.ViewModels
             subscribeToEvents();
         }
 
-        private void WavePlayer_PlaybackStopped(object sender, EventArgs e)
-        {
-            try
-            {
-                var currFileInd = ((FilesViewModel)FilesView).IndexOfFilePath(audioPlayer.FilePath);
-
-                if (currFileInd < 0 && ((FilesViewModel)FilesView).SelectedFile == null)
-                {
-                    audioPlayer.Stop();
-
-                    return;
-                }
-
-                if (((FilesViewModel)FilesView).Files.Count <= (currFileInd + 1))
-                {
-                    audioPlayer.Stop();
-
-                    return;
-                }
-
-                ((FilesViewModel)FilesView).SelectedFile = ((FilesViewModel)FilesView).Files[currFileInd + 1];
-
-                audioPlayer.FilePath = ((FilesViewModel)FilesView).SelectedFile.FullPath;
-                audioPlayer.Effects = (IEffectProvider)DSPView;
-                audioPlayer.Play();
-            }
-            catch
-            {
-                audioPlayer.Stop();
-            }
-        }
-
         private void subscribeToEvents()
         {
             ((FilesViewModel)FilesView).StartProcessEvent += MainWindowViewModel_StartProcessEvent;
@@ -71,8 +39,64 @@ namespace DSPEmulatorUI.ViewModels
 
             ((DSPViewModel)DSPView).PropertyChanged += MainWindowViewModel_PropertyChanged;
 
-            //audioPlayer.PlaybackStopped += WavePlayer_PlaybackStopped;
             ((FilesViewModel)FilesView).PlayerViewModel = new PlayerViewModel(audioPlayer);
+            ((FilesViewModel)FilesView).PlayerViewModel.PreviousAudioFileEvent += PlayerViewModel_PreviousAudioFileEvent;
+            ((FilesViewModel)FilesView).PlayerViewModel.NextAudioFileEvent += PlayerViewModel_NextAudioFileEvent;
+        }
+        private void unsubscribeToEvents()
+        {
+            ((FilesViewModel)FilesView).StartProcessEvent -= MainWindowViewModel_StartProcessEvent;
+            ((FilesViewModel)FilesView).PreviewPlayEvent -= MainWindowViewModel_PreviewPlayEvent;
+
+            ((DSPViewModel)DSPView).PropertyChanged -= MainWindowViewModel_PropertyChanged;
+
+            ((FilesViewModel)FilesView).PlayerViewModel.PreviousAudioFileEvent -= PlayerViewModel_PreviousAudioFileEvent;
+            ((FilesViewModel)FilesView).PlayerViewModel.NextAudioFileEvent -= PlayerViewModel_NextAudioFileEvent;
+        }
+
+        private void PlayerViewModel_NextAudioFileEvent(object sender, string currentFile)
+        {
+            if (((FilesViewModel)FilesView).Files.Count < 2)
+                return;
+
+            int currFileInd = ((FilesViewModel)FilesView).IndexOfFilePath(currentFile);
+
+            try
+            {
+                if (((FilesViewModel)FilesView).Files.Count <= (currFileInd + 1))
+                    currFileInd = -1;
+
+                ((FilesViewModel)FilesView).SelectedFile = ((FilesViewModel)FilesView).Files[currFileInd + 1];
+
+                audioPlayer.Stop();
+                audioPlayer.FilePath = ((FilesViewModel)FilesView).SelectedFile.FullPath;
+                audioPlayer.Effects = (IEffectProvider)DSPView;
+                audioPlayer.Play();
+            }
+            catch{ }
+        }
+
+        private void PlayerViewModel_PreviousAudioFileEvent(object sender, string currentFile)
+        {
+            if (((FilesViewModel)FilesView).Files.Count < 2)
+                return;
+
+            int currFileInd = ((FilesViewModel)FilesView).IndexOfFilePath(currentFile);
+
+            try
+            {
+                if ((currFileInd - 1) < 0)
+                    currFileInd = ((FilesViewModel)FilesView).Files.Count;
+
+
+                ((FilesViewModel)FilesView).SelectedFile = ((FilesViewModel)FilesView).Files[currFileInd - 1];
+
+                audioPlayer.Stop();
+                audioPlayer.FilePath = ((FilesViewModel)FilesView).SelectedFile.FullPath;
+                audioPlayer.Effects = (IEffectProvider)DSPView;
+                audioPlayer.Play();
+            }
+            catch { }
         }
 
         private void MainWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -200,7 +224,7 @@ namespace DSPEmulatorUI.ViewModels
 
             if (dialog.ShowDialog() == true)
             {
-                if (audioPlayer.IsPlaying)
+                if (audioPlayer.IsPlaying || audioPlayer.IsPaused)
                 {
                     audioPlayer.Stop();
                 }
@@ -223,6 +247,7 @@ namespace DSPEmulatorUI.ViewModels
                     return;
                 }
 
+                unsubscribeToEvents();
                 Items.Clear();
 
                 Items.Add(newFilesView);

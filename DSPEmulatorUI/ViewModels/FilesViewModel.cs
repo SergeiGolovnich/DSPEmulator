@@ -16,18 +16,31 @@ namespace DSPEmulatorUI.ViewModels
     public class FilesViewModel : Screen
     {
         private AudioFileInfo _selectedFile;
-        public PlayerViewModel PlayerViewModel { get; set; }
+        private PlayerViewModel playerViewModel;
+
+        public PlayerViewModel PlayerViewModel
+        {
+            get => playerViewModel;
+            set
+            {
+                playerViewModel = value;
+
+                NotifyOfPropertyChange(()=>PlayerViewModel);
+            }
+        }
 
         public string ImagePath { get; } = "/Views/Icons/files_icon.png";
         [JsonProperty]
         public BindableCollection<AudioFileInfo> Files { get; set; } = new BindableCollection<AudioFileInfo>();
-        public AudioFileInfo SelectedFile { get => _selectedFile; 
-            set 
+        public AudioFileInfo SelectedFile
+        {
+            get => _selectedFile;
+            set
             {
                 _selectedFile = value;
                 NotifyOfPropertyChange(() => SelectedFile);
                 NotifyOfPropertyChange(() => CanPreviewBtn);
-            } 
+            }
         }
         [JsonProperty]
         public string OutputFolder { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
@@ -119,7 +132,8 @@ namespace DSPEmulatorUI.ViewModels
             PreviewPlayEvent?.Invoke(this, null);
         }
 
-        public bool CanPreviewBtn { 
+        public bool CanPreviewBtn
+        {
             get
             {
                 var output = false;
@@ -142,7 +156,7 @@ namespace DSPEmulatorUI.ViewModels
 
             Files.Clear();
 
-            foreach(JToken file in files)
+            foreach (JToken file in files)
             {
                 AudioFileInfo fileInfo = file.ToObject<AudioFileInfo>();
                 Files.Add(fileInfo);
@@ -155,7 +169,7 @@ namespace DSPEmulatorUI.ViewModels
             {
                 var dropData = e.Data.GetData(DataFormats.FileDrop) as string[];
 
-                foreach(string file in dropData)
+                foreach (string file in dropData)
                 {
                     var files = AudioFileFinder.GetAllAudioFilesRecursively(file);
 
@@ -165,7 +179,7 @@ namespace DSPEmulatorUI.ViewModels
         }
         public void Files_MouseDoubleClick(MouseButtonEventArgs e)
         {
-            if(CanPreviewBtn)
+            if (CanPreviewBtn)
             {
                 PreviewBtn();
             }
@@ -173,9 +187,9 @@ namespace DSPEmulatorUI.ViewModels
 
         public int IndexOfFilePath(string filePath)
         {
-            for(int i = 0; i < Files.Count; i++)
+            for (int i = 0; i < Files.Count; i++)
             {
-                if(filePath == Files[i].FullPath)
+                if (filePath == Files[i].FullPath)
                 {
                     return i;
                 }
