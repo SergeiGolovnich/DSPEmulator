@@ -16,7 +16,7 @@
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="5" Orientation="Vertical">
-                        <Image Width="40" Source="{Binding ImagePath}" />
+                        <Image Width="40" Source="{Binding ImagePath}" RenderOptions.BitmapScalingMode="HighQuality"/>
                         <TextBlock TextAlignment="Center" Text="{Binding DisplayName}"/>
                     </StackPanel>
                 </DataTemplate>

@@ -6,6 +6,11 @@
              xmlns:local="clr-namespace:DSPEmulatorUI.Views" xmlns:viewmodels="clr-namespace:DSPEmulatorUI.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:PlayerViewModel}"
              mc:Ignorable="d" DataContextChanged="UserControl_DataContextChanged" 
 >
+    <UserControl.Resources>
+        <Style TargetType="Image">
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

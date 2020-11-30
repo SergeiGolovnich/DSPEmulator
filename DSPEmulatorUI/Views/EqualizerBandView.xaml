@@ -5,6 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DSPEmulatorUI.Views" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:cal="http://caliburnmicro.com"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="Image">
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+        </Style>
+    </UserControl.Resources>
     <Border Padding="1" Margin="1" BorderBrush="Gainsboro" BorderThickness="1">
     <StackPanel Orientation="Vertical">
         <Button x:Name="RemoveBand" Width="20" Height="20" BorderThickness="0" ToolTip="Remove Band" Background="{x:Null}">
